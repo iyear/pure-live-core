@@ -1,0 +1,10 @@
+module push_msg
+{
+  struct WSPushMessage
+  {
+      0 optional int ePushType;
+      1 optional long iUri;
+      2 optional vector<byte> sMsg;
+      3 optional int iProtocolType;
+  };
+};

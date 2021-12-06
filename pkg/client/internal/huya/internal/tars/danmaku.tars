@@ -1,0 +1,50 @@
+module danmaku
+{
+    struct SenderInfo
+    {
+        0 optional long   lUid;
+        1 optional long   lImid;
+        2 optional string sNickName;
+        3 optional int    iGender;
+    };
+    struct ContentFormat
+    {
+        0 optional int iFontColor;
+        1 optional int iFontSize;
+        2 optional int iPopupStyle;
+    };
+    struct BulletFormat
+    {
+        0 optional int iFontColor;
+        1 optional int iFontSize;
+        2 optional int iTextSpeed;
+        3 optional int iTransitionType;
+        4 optional int iPopupStyle;
+    };
+    struct DecorationInfo
+    {
+        0 optional int          iAppId;
+        1 optional int          iViewType;
+        2 optional vector<byte> vData;
+    };
+    struct UidNickName
+    {
+        0 optional long   lUid;
+        1 optional string sNickName;
+    };
+    struct MessageNotice
+    {
+        0  optional SenderInfo             tUserInfo;
+        1  optional long                   lTid;
+        2  optional long                   lSid;
+        3  optional string                 sContent;
+        4  optional int                    iShowMode;
+        5  optional ContentFormat          tFormat;
+        6  optional BulletFormat           tBulletFormat;
+        7  optional int                    iTermType;
+        8  optional vector<DecorationInfo> vDecorationPrefix;
+        9  optional vector<DecorationInfo> vDecorationSuffix;
+        10 optional vector<UidNickName>    vAtSomeone;
+        11 optional long                   lPid;
+    };
+};

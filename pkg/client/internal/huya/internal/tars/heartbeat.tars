@@ -1,0 +1,25 @@
+module heartbeat
+{
+    struct UserId
+    {
+        0 optional long   lUid;
+        1 optional string sGuid;
+        2 optional string sToken;
+        3 optional string sHuyaUA;
+        4 optional string sCookie;
+    };
+    struct UserHeartBeatReq
+    {
+        0  optional UserId tId;
+        1  optional long   lTid;
+        2  optional long   lSid;
+        3  optional long   lShortTid;
+        4  optional long   lPid;
+        5  optional bool   bWatchVideo;
+        6  optional int    eLineType;
+        7  optional int    iFps;
+        8  optional int    iAttendee;
+        9  optional int    iBandwidth;
+        10 optional int    iLastHeartElapseTime;
+    };
+};

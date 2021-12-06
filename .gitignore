@@ -1,0 +1,8 @@
+dist
+.idea
+log
+data
+config.yaml
+*.exe
+bin
+static

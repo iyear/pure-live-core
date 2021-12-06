@@ -1,0 +1,23 @@
+server:
+  port: 8800 # 本地监听端口
+  debug: false # 是否开启Debug模式
+  path: ./data # 数据存储目录
+socks5:
+  enable: false # 是否启用socks5代理
+  host: 127.0.0.1 # socks5相关信息
+  port: 1080
+  user:
+  password:
+account: # 平台账号信息，用于发送弹幕，如果不需要发送弹幕功能可以不用填写以下所有内容
+  bilibili:
+    # 是否启用bilibili账号
+    enable: true
+    # 以下为b站的Cookies
+    DedeUserID: xxx
+    DedeUserIDCkMd5: xxx
+    SESSDATA: xxx
+    BiliJCT: xxx
+  huya:
+    enable: false
+  douyu:
+    enable: false

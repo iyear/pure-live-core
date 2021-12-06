@@ -1,0 +1,7 @@
+module online
+{
+  struct AttendeeCountNotice
+  {
+    0 optional int iAttendeeCount;
+  };
+};

@@ -1,0 +1,8 @@
+module ws_cmd
+{
+    struct WebSocketCommand
+    {
+        0 optional int          iCmdType;
+        1 optional vector<byte> vData;
+    };
+};
