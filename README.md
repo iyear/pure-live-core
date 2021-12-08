@@ -62,8 +62,11 @@ https://github.com/BacooTang/huya-danmu
 
 `-r` : 房间号。长短号均可。
 
+`-d` : 下载对应的直播流，不传入则不下载，传入文件名。
+
 ```sh
 ./pure-live get -p bilibili -r 6
+./pure-live get -p bilibili -r 6 -d b.flv
 ```
 
 成功获得相关信息

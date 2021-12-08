@@ -4,13 +4,18 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/forwarder"
 	"github.com/iyear/pure-live/service/srv_live"
+	"github.com/q191201771/lal/pkg/httpflv"
 	"github.com/spf13/cobra"
+	"os"
+	"os/signal"
 )
 
 var (
-	plat string
-	room string
+	plat     string
+	room     string
+	download string
 )
 
 // getCmd represents the get command
@@ -28,7 +33,7 @@ func init() {
 
 	getCmd.PersistentFlags().StringVarP(&plat, "plat", "p", "bilibili", "live platform")
 	getCmd.PersistentFlags().StringVarP(&room, "room", "r", "6", "live room")
-
+	getCmd.PersistentFlags().StringVarP(&download, "download", "d", "", "download live stream to .flv file")
 }
 
 func get() {
@@ -49,7 +54,17 @@ func get() {
 		return
 	}
 	infoOutput(info)
-	_, _ = fmt.Fprintf(color.Output, "Stream: %s", color.New(color.FgBlue).SprintFunc()(url.Origin))
+	_, _ = fmt.Fprintf(color.Output, "Stream: %s\n", color.New(color.FgBlue).SprintFunc()(url.Origin))
+
+	if download == "" {
+		return
+	}
+
+	if err = dlStream(url.Type, url.Origin); err != nil {
+		color.Red("[ERROR] can't download stream: %s", err)
+		return
+	}
+	color.Blue("Download Live Stream Succ...")
 }
 
 func infoOutput(info *model.RoomInfo) {
@@ -59,4 +74,35 @@ func infoOutput(info *model.RoomInfo) {
 		blue(info.Upper),
 		blue(info.Title),
 		blue(info.Link))
+}
+
+func dlStream(tp string, url string) error {
+	writer := httpflv.FlvFileWriter{}
+
+	if err := writer.Open(download); err != nil {
+		return err
+	}
+
+	if err := writer.WriteFlvHeader(); err != nil {
+		return err
+	}
+
+	err := forwarder.Pull(forwarder.GetIn(tp), url, func(tag httpflv.Tag) {
+		_ = writer.WriteTag(tag)
+	})
+	if err != nil {
+		return err
+	}
+
+	color.Yellow("[WARN] Ctrl + C to finish downloading")
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, os.Kill)
+	<-sig
+
+	if err = writer.Dispose(); err != nil {
+		return err
+	}
+	return nil
+
 }
