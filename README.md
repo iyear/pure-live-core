@@ -48,6 +48,8 @@ https://github.com/BacooTang/huya-danmu
 
 前端自己快速看了一下 `Vue` 一把梭写出来的，仅仅是能用的水平，代码结构也很庞杂凌乱，期待更好的第三方前端页面出现。
 
+前端仓库: https://github.com/iyear/pure-live-frontend
+
 **其他前端页面：**
 
 - ......
