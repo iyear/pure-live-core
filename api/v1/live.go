@@ -16,6 +16,15 @@ import (
 
 func Serve(c *gin.Context) {
 	var err error
+	req := struct {
+		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
+		Room string `form:"room" binding:"required" json:"room"`
+	}{}
+	if err = c.ShouldBind(&req); err != nil {
+		api.RespFmt(c, e.InvalidParams, err, nil)
+		return
+	}
+
 	up := websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
 			return true
@@ -40,10 +49,10 @@ func Serve(c *gin.Context) {
 	}
 	header.Set("Set-Cookie", cookie.String())
 
-	cli, err := client.GetClient(c.Query("plat"))
+	cli, err := client.GetClient(req.Plat)
 	if err != nil {
-		zap.S().Warnw("failed to get platform", "id", id, "error", err, "plat", c.Query("plat"))
-		c.Status(http.StatusBadRequest)
+		zap.S().Warnw("failed to get platform", "id", id, "error", err, "plat", req.Plat)
+		api.RespFmt(c, e.UnknownError, err, nil)
 		return
 	}
 	defer cli.Stop()
@@ -57,7 +66,7 @@ func Serve(c *gin.Context) {
 
 	global.Hub.Conn.Store(id, &global.Conn{
 		Server: ws,
-		Room:   c.Query("room"),
+		Room:   req.Room,
 		Client: cli,
 	})
 	defer global.Hub.Conn.Delete(id)
@@ -65,16 +74,16 @@ func Serve(c *gin.Context) {
 	ctx, stop := context.WithCancel(context.WithValue(context.Background(), "id", id))
 	defer stop()
 
-	zap.S().Infow("start serving...", "id", id, "room", c.Query("room"), "plat", c.Query("plat"))
+	zap.S().Infow("start serving...", "id", id, "room", req.Room, "plat", req.Plat)
 
 	srv_live.Serve(ctx)
 
-	zap.S().Infow("stop serving...", "id", id, "room", c.Query("room"), "plat", c.Query("plat"))
+	zap.S().Infow("stop serving...", "id", id, "room", req.Room, "plat", req.Plat)
 }
 
 func GetPlayURL(c *gin.Context) {
 	req := struct {
-		Plat string `form:"plat" binding:"required" json:"plat"`
+		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
@@ -91,7 +100,7 @@ func GetPlayURL(c *gin.Context) {
 }
 func GetRoomInfo(c *gin.Context) {
 	req := struct {
-		Plat string `form:"plat" binding:"required" json:"plat"`
+		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
@@ -110,8 +119,8 @@ func SendDanmaku(c *gin.Context) {
 	req := struct {
 		ID      string `form:"id" binding:"required,uuid"` // 服务端分发的uuid
 		Content string `form:"content" binding:"required" json:"content"`
-		Type    int    `form:"type,default=0" binding:"gte=0,lte=2" json:"type"` // 1:顶部 0:滚动 2:底部
-		Color   int64  `form:"color,default=16777215" json:"color"`
+		Type    int    `form:"type" binding:"required,gte=0,lte=2" json:"type"` // 1:顶部 0:滚动 2:底部
+		Color   int64  `form:"color" binding:"required" json:"color"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
 		api.RespFmt(c, e.InvalidParams, nil, nil)
