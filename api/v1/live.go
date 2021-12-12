@@ -62,7 +62,9 @@ func Serve(c *gin.Context) {
 		zap.S().Errorw("failed to upgrade to websocket connection", "id", id, "error", err)
 		return
 	}
-	defer ws.Close()
+	defer func(ws *websocket.Conn) {
+		_ = ws.Close()
+	}(ws)
 
 	global.Hub.Conn.Store(id, &global.Conn{
 		Server: ws,
