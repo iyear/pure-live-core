@@ -6,8 +6,8 @@ import (
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/format"
 	"github.com/iyear/pure-live/pkg/util"
-	"github.com/iyear/pure-live/server/api"
 	"go.uber.org/zap"
 	"time"
 )
@@ -33,7 +33,9 @@ func Serve(ctx context.Context) {
 		zap.S().Warnw("failed to connect live websocket server", "id", id, "error", err)
 		return
 	}
-	defer live.Close()
+	defer func(live *websocket.Conn) {
+		_ = live.Close()
+	}(live)
 
 	zap.S().Infow("connected to live danmaku server", "id", id)
 
@@ -70,16 +72,16 @@ func Serve(ctx context.Context) {
 		select {
 		// 5秒检查一次客户端存活
 		case <-health.C:
-			if err = conn.Server.WriteMessage(websocket.TextMessage, api.MsgFmt(conf.EventCheck, nil)); err != nil {
+			if err = conn.Server.WriteMessage(websocket.TextMessage, format.WS(conf.EventCheck, nil)); err != nil {
 				zap.S().Warnw("failed to write ws message", "id", id, "error", err)
 				return
 			}
-		case tp := <-rev:
-			if tp.Error != nil {
+		case transport := <-rev:
+			if transport.Error != nil {
 				zap.S().Warnw("receive transport error", "id", id, "error", err)
 				continue
 			}
-			if err = conn.Server.WriteMessage(websocket.TextMessage, api.MsgFmt(tp.Msg.Event(), tp.Msg)); err != nil {
+			if err = conn.Server.WriteMessage(websocket.TextMessage, format.WS(transport.Msg.Event(), transport.Msg)); err != nil {
 				zap.S().Warnw("failed to write ws message", "id", id, "error", err)
 				return
 			}
