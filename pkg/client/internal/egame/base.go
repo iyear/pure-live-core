@@ -24,9 +24,10 @@ func getInfo(room string) (*gjson.Result, error) {
 	resp := ""
 	tmpl := `{"0":{"module":"pgg_live_read_svr","method":"get_live_and_profile_info","param":{"anchor_id":{{id}},"layout_id":"hot","index":1,"other_uid":0}}}`
 
-	err := gout.GET("https://share.egame.qq.com/cgi-bin/pgg_async_fcgi").SetQuery(gout.H{
-		"param": strings.ReplaceAll(tmpl, "{{id}}", room),
-	}).BindBody(&resp).Do()
+	err := gout.GET("https://share.egame.qq.com/cgi-bin/pgg_async_fcgi").
+		SetQuery(gout.H{
+			"param": strings.ReplaceAll(tmpl, "{{id}}", room),
+		}).BindBody(&resp).Do()
 
 	if err != nil {
 		return nil, err
@@ -44,8 +45,8 @@ func (e *EGame) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	url := r.Get("video_info.stream_infos.0.play_url").String()
 
 	return &model.PlayURL{
-		Qn:     conf.QnBest,
-		Desc:   util.Qn2Desc(conf.QnBest),
+		Qn:     qn,
+		Desc:   util.Qn2Desc(qn),
 		Origin: url,
 		CORS:   true,
 		Type:   conf.StreamFlv,
