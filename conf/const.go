@@ -4,6 +4,7 @@ const (
 	PlatBiliBili = "bilibili"
 	PlatHuya     = "huya"
 	PlatDouyu    = "douyu"
+	PlatEGame    = "egame"
 )
 
 const (
