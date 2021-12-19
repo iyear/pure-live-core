@@ -19,8 +19,6 @@ import (
 
 type Douyu struct{}
 
-const wsDefaultHost = "wss://danmuproxy.douyu.com:8503/"
-
 func NewDouyu() (model.Client, error) {
 	return &Douyu{}, nil
 }
@@ -166,7 +164,7 @@ func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 func (d *Douyu) Host() string {
-	return wsDefaultHost
+	return "wss://danmuproxy.douyu.com:8503/"
 }
 
 func (d *Douyu) Enter(room string) (int, [][]byte, error) {

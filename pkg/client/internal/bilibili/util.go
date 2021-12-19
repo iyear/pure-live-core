@@ -17,9 +17,6 @@ const (
 	wsOpEnterRoom        = 7 // 请求进入房间
 	wsOpEnterRoomSuccess = 8 // 进房回应
 )
-const (
-	wsDefaultHost = "wss://broadcastlv.chat.bilibili.com/sub"
-)
 
 // Header
 const (

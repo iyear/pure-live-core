@@ -9,7 +9,7 @@ import (
 )
 
 func (c *base) Host() string {
-	return wsDefaultHost
+	return "wss://broadcastlv.chat.bilibili.com/sub"
 }
 func (c *base) Enter(room string) (int, [][]byte, error) {
 	r, err := strconv.ParseInt(room, 10, 64)

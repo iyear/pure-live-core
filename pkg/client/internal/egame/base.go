@@ -70,7 +70,7 @@ func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 func (e *EGame) Host() string {
-	panic("implement me")
+	return "wss://barragepush.egame.qq.com/sub"
 }
 
 func (e *EGame) Enter(room string) (tp int, data [][]byte, err error) {
