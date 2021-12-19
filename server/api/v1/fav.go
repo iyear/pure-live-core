@@ -2,9 +2,9 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/api"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/e"
+	"github.com/iyear/pure-live/server/api"
 	"github.com/iyear/pure-live/service/srv_fav"
 	"go.uber.org/zap"
 )
