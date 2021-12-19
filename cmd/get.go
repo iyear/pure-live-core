@@ -1,21 +1,32 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/fatih/color"
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/client"
+	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/forwarder"
+	"github.com/iyear/pure-live/pkg/util"
 	"github.com/iyear/pure-live/service/srv_live"
 	"github.com/q191201771/lal/pkg/httpflv"
 	"github.com/spf13/cobra"
+	"github.com/xuri/excelize/v2"
 	"os"
 	"os/signal"
+	"sync"
+	"time"
 )
 
 var (
-	plat     string
-	room     string
-	download string
+	plat    string
+	room    string
+	stream  string
+	danmaku string
+	roll    bool
 )
 
 // getCmd represents the get command
@@ -32,39 +43,66 @@ func init() {
 	rootCmd.AddCommand(getCmd)
 
 	getCmd.PersistentFlags().StringVarP(&plat, "plat", "p", "bilibili", "live platform")
-	getCmd.PersistentFlags().StringVarP(&room, "room", "r", "6", "live room")
-	getCmd.PersistentFlags().StringVarP(&download, "download", "d", "", "download live stream to .flv file")
+	getCmd.PersistentFlags().StringVarP(&room, "room", "r", "6", "live room,it can be short string or real string")
+	getCmd.PersistentFlags().StringVar(&stream, "stream", "", "download live stream to .flv file")
+	getCmd.PersistentFlags().StringVar(&danmaku, "danmaku", "", "download live danmaku to .xlsx file")
+	getCmd.PersistentFlags().BoolVar(&roll, "roll", false, "display danmaku content and scroll")
 }
 
 func get() {
 	info, err := srv_live.GetRoomInfo(plat, room)
 	if err != nil {
-		color.Red("[ERROR] can't get room info: %s", err)
+		color.Red("[ERROR] can't get room info: %s\n", err)
 		return
 	}
 
 	if info.Status == 0 {
-		color.Yellow("[WARN] room is not online,so can't get the stream")
+		color.Yellow("[WARN] room is not online,so can't get the stream\n")
 		infoOutput(info)
 		return
 	}
+
+	room = info.Room
+
 	url, err := srv_live.GetPlayURL(plat, info.Room)
 	if err != nil {
-		color.Red("[ERROR] can't get room info: %s", err)
+		color.Red("[ERROR] can't get room info: %s\n", err)
 		return
 	}
 	infoOutput(info)
 	_, _ = fmt.Fprintf(color.Output, "Stream: %s\n", color.New(color.FgBlue).SprintFunc()(url.Origin))
 
-	if download == "" {
-		return
+	color.Yellow("\n[WARN] Ctrl + C to finish downloading\n")
+	ctx, stop := context.WithCancel(context.Background())
+
+	wg := sync.WaitGroup{}
+	if stream != "" {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if err := dlStream(ctx, url.Type, url.Origin); err != nil {
+				color.Red("[ERROR] can't download stream: %s\n", err)
+				return
+			}
+		}()
 	}
 
-	if err = dlStream(url.Type, url.Origin); err != nil {
-		color.Red("[ERROR] can't download stream: %s", err)
-		return
+	if danmaku != "" {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if err := dlDanmaku(ctx); err != nil {
+				color.Red("[ERROR] can't download danmaku: %s\n", err)
+				return
+			}
+		}()
 	}
-	color.Blue("Download Live Stream Succ...")
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, os.Kill)
+	<-sig
+	stop()
+	wg.Wait()
 }
 
 func infoOutput(info *model.RoomInfo) {
@@ -76,10 +114,15 @@ func infoOutput(info *model.RoomInfo) {
 		blue(info.Link))
 }
 
-func dlStream(tp string, url string) error {
+func dlStream(ctx context.Context, tp string, url string) error {
+	if util.FileExists(stream) {
+		color.Yellow("[WARN] file %s already exists, so skip stream downloading\n", stream)
+		return nil
+	}
+
 	writer := httpflv.FlvFileWriter{}
 
-	if err := writer.Open(download); err != nil {
+	if err := writer.Open(stream); err != nil {
 		return err
 	}
 
@@ -94,15 +137,77 @@ func dlStream(tp string, url string) error {
 		return err
 	}
 
-	color.Yellow("[WARN] Ctrl + C to finish downloading")
-
-	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt, os.Kill)
-	<-sig
+	<-ctx.Done()
 
 	if err = writer.Dispose(); err != nil {
 		return err
 	}
 	return nil
+}
 
+func dlDanmaku(ctx context.Context) error {
+	if util.FileExists(danmaku) {
+		color.Yellow("[WARN] file %s already exists, so skip danmaku downloading\n", danmaku)
+		return nil
+	}
+
+	cli, err := client.GetClient(plat)
+	if err != nil {
+		return err
+	}
+	defer cli.Stop()
+
+	rev, err := srv_live.Serve(ctx, websocket.DefaultDialer, uuid.New().String(), cli, room)
+	if err != nil {
+		return err
+	}
+
+	file := excelize.NewFile()
+	writer, err := file.NewStreamWriter("Sheet1")
+	if err != nil {
+		return err
+	}
+
+	_ = writer.SetRow("A1", []interface{}{
+		excelize.Cell{Value: "内容"},
+		excelize.Cell{Value: "颜色(十进制)"},
+		excelize.Cell{Value: "位置"},
+		excelize.Cell{Value: "时间"},
+	})
+
+	count := 2
+	for {
+		select {
+		case <-ctx.Done():
+			if err = writer.Flush(); err != nil {
+				return err
+			}
+			if err = file.SaveAs(danmaku); err != nil {
+				return err
+			}
+			color.Blue("Download Live Danmaku Succ...\n")
+			return nil
+		case transport := <-rev:
+			if transport.Msg.Event() != conf.EventDanmaku {
+				continue
+			}
+			dm := transport.Msg.(*model.MsgDanmaku)
+			if roll {
+				color.Blue("%s %d\n", dm.Content, dm.Color)
+			}
+			cell, err := excelize.CoordinatesToCellName(1, count)
+			if err != nil {
+				return err
+			}
+			if err = writer.SetRow(cell, []interface{}{
+				excelize.Cell{Value: dm.Content},
+				excelize.Cell{Value: dm.Color},
+				excelize.Cell{Value: util.DmMode2Desc(dm.Type)},
+				excelize.Cell{Value: time.Now().Format("2006-01-02 15:04:05")},
+			}); err != nil {
+				return err
+			}
+			count++
+		}
+	}
 }

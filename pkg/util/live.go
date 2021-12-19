@@ -12,3 +12,13 @@ var qn2desc = map[int]string{
 func Qn2Desc(qn int) string {
 	return qn2desc[qn]
 }
+
+var mode2desc = map[int]string{
+	conf.DanmakuTypeTop:    "顶部",
+	conf.DanmakuTypeRight:  "飞行",
+	conf.DanmakuTypeBottom: "底部",
+}
+
+func DmMode2Desc(mode int) string {
+	return mode2desc[mode]
+}
