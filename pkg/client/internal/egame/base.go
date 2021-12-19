@@ -74,19 +74,26 @@ func (e *EGame) Host() string {
 }
 
 func (e *EGame) Enter(room string) (tp int, data [][]byte, err error) {
-	panic("implement me")
+	_ = room
+	return 0, nil, fmt.Errorf("not supported")
 }
 
 func (e *EGame) Handle(tp int, data []byte) (msg []model.Msg, matched bool, err error) {
-	panic("implement me")
+	_ = tp
+	_ = data
+	return nil, false, nil
 }
 
 func (e *EGame) HeartBeat() (tp int, data []byte, err error) {
-	panic("implement me")
+	return 0, nil, fmt.Errorf("not supported")
 }
 
 func (e *EGame) SendDanmaku(room string, content string, tp int, color int64) error {
-	panic("implement me")
+	_ = room
+	_ = content
+	_ = tp
+	_ = color
+	return fmt.Errorf("not supported")
 }
 
 func (e *EGame) Stop() {
