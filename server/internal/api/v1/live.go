@@ -1,87 +1,12 @@
 package v1
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/global"
-	"github.com/iyear/pure-live/pkg/client"
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
 	"github.com/iyear/pure-live/service/srv_live"
 	"go.uber.org/zap"
-	"net/http"
 )
-
-func Serve(c *gin.Context) {
-	var err error
-	req := struct {
-		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
-		Room string `form:"room" binding:"required" json:"room"`
-	}{}
-	if err = c.ShouldBind(&req); err != nil {
-		format.HTTP(c, ecode.InvalidParams, err, nil)
-		return
-	}
-
-	up := websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	}
-
-	id := ""
-	for {
-		id = uuid.New().String()
-		if _, ok := global.Hub.Conn.Load(id); !ok {
-			break
-		}
-	}
-
-	header := http.Header{}
-	cookie := http.Cookie{
-		Name:     "uuid",
-		Path:     "/",
-		Value:    id,
-		Secure:   false,
-		HttpOnly: false,
-	}
-	header.Set("Set-Cookie", cookie.String())
-
-	cli, err := client.GetClient(req.Plat)
-	if err != nil {
-		zap.S().Warnw("failed to get platform", "id", id, "error", err, "plat", req.Plat)
-		format.HTTP(c, ecode.UnknownError, err, nil)
-		return
-	}
-	defer cli.Stop()
-
-	ws := &websocket.Conn{}
-	if ws, err = up.Upgrade(c.Writer, c.Request, header); err != nil {
-		zap.S().Errorw("failed to upgrade to websocket connection", "id", id, "error", err)
-		return
-	}
-	defer func(ws *websocket.Conn) {
-		_ = ws.Close()
-	}(ws)
-
-	global.Hub.Conn.Store(id, &global.Conn{
-		Server: ws,
-		Room:   req.Room,
-		Client: cli,
-	})
-	defer global.Hub.Conn.Delete(id)
-
-	ctx, stop := context.WithCancel(context.WithValue(context.Background(), "id", id))
-	defer stop()
-
-	zap.S().Infow("start serving...", "id", id, "room", req.Room, "plat", req.Plat)
-
-	srv_live.Serve(ctx)
-
-	zap.S().Infow("stop serving...", "id", id, "room", req.Room, "plat", req.Plat)
-}
 
 func GetPlayURL(c *gin.Context) {
 	req := struct {

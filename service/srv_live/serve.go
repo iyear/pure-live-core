@@ -3,104 +3,50 @@ package srv_live
 import (
 	"context"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/conf"
-	"github.com/iyear/pure-live/pkg/format"
-	"github.com/iyear/pure-live/pkg/util"
 	"go.uber.org/zap"
 	"time"
 )
 
-func Serve(ctx context.Context) {
+func Serve(ctx context.Context, dialer *websocket.Dialer, id string, client model.Client, room string) (chan *model.Transport, error) {
 	// 过程
 	// conn -> enter(on entered) -> go receive()   -> for{send msg to local}
 	//  						 -> go heartbeat() -
 
-	id := ctx.Value("id").(string)
-	conn, err := global.GetConn(id)
+	live, _, err := dialer.DialContext(ctx, client.Host(), nil)
 	if err != nil {
-		return
+		return nil, err
 	}
-
-	dialer := websocket.DefaultDialer
-	if conf.C.Socks5.Enable {
-		dialer.NetDial = util.MustGetSocks5(conf.C.Socks5.Host, conf.C.Socks5.Port, conf.C.Socks5.User, conf.C.Socks5.Password).Dial
-	}
-
-	live, _, err := dialer.DialContext(ctx, conn.Client.Host(), nil)
-	if err != nil {
-		zap.S().Warnw("failed to connect live websocket server", "id", id, "error", err)
-		return
-	}
-	defer func(live *websocket.Conn) {
-		_ = live.Close()
-	}(live)
 
 	zap.S().Infow("connected to live danmaku server", "id", id)
 
 	rev := make(chan *model.Transport)
 
-	tp, data, err := conn.Client.Enter(conn.Room)
-	// fmt.Println(hex.Dump(data))
+	tp, data, err := client.Enter(room)
+
 	if err != nil {
-		zap.S().Warnw("failed to get enter room data", "id", id, "error", err)
-		return
+		return nil, err
 	}
 	for _, d := range data {
 		if err = live.WriteMessage(tp, d); err != nil {
-			zap.S().Warnw("failed to write ws msg", "id", id, "error", err)
-			return
+			return nil, err
 		}
 	}
 
 	zap.S().Infow("entered the room", "id", id)
 
-	hbCtx, hbCancel := context.WithCancel(ctx)
-	revCtx, revCancel := context.WithCancel(ctx)
+	go receive(ctx, id, client, live, rev)
+	go heartbeat(ctx, id, client, live)
 
-	go receive(revCtx, live, rev)
-	defer revCancel()
-
-	go heartbeat(hbCtx, live)
-	defer hbCancel()
-
-	// 客户端心跳检查
-	health := time.NewTicker(5 * time.Second)
-	defer health.Stop()
-	for {
-		select {
-		// 5秒检查一次客户端存活
-		case <-health.C:
-			if err = conn.Server.WriteMessage(websocket.TextMessage, format.WS(conf.EventCheck, nil)); err != nil {
-				zap.S().Warnw("failed to write ws message", "id", id, "error", err)
-				return
-			}
-		case transport := <-rev:
-			if transport.Error != nil {
-				zap.S().Warnw("receive transport error", "id", id, "error", err)
-				continue
-			}
-			if err = conn.Server.WriteMessage(websocket.TextMessage, format.WS(transport.Msg.Event(), transport.Msg)); err != nil {
-				zap.S().Warnw("failed to write ws message", "id", id, "error", err)
-				return
-			}
-		}
-	}
+	return rev, nil
 }
 
-func heartbeat(ctx context.Context, live *websocket.Conn) {
-	id := ctx.Value("id").(string)
-	conn, err := global.GetConn(id)
-	if err != nil {
-		return
-	}
-
+func heartbeat(ctx context.Context, id string, client model.Client, live *websocket.Conn) {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 
 	hb := func() {
-		tp, data, err := conn.Client.HeartBeat()
+		tp, data, err := client.HeartBeat()
 		if err != nil {
 			zap.S().Warnw("failed to get heartbeat data", "id", id, "error", err)
 			return
@@ -124,19 +70,10 @@ func heartbeat(ctx context.Context, live *websocket.Conn) {
 	}
 
 }
-func receive(ctx context.Context, live *websocket.Conn, rev chan *model.Transport) {
+
+func receive(ctx context.Context, id string, client model.Client, live *websocket.Conn, rev chan *model.Transport) {
 	msgCtx, msgCancel := context.WithCancel(ctx)
 	defer msgCancel()
-
-	var (
-		conn *global.Conn
-		err  error
-	)
-	id := ctx.Value("id").(string)
-	if conn, err = global.GetConn(id); err != nil {
-		return
-	}
-
 	for {
 		select {
 		case <-ctx.Done():
@@ -147,11 +84,11 @@ func receive(ctx context.Context, live *websocket.Conn, rev chan *model.Transpor
 			if err != nil {
 				continue
 			}
-			msg, ok, err := conn.Client.Handle(t, data)
+			msg, ok, err := client.Handle(t, data)
 
 			// 错误判断
 			if err != nil {
-				go push(msgCtx, &model.Transport{
+				go push(msgCtx, id, &model.Transport{
 					Msg:   nil,
 					Error: err,
 				}, rev)
@@ -163,7 +100,7 @@ func receive(ctx context.Context, live *websocket.Conn, rev chan *model.Transpor
 			}
 
 			for _, m := range msg {
-				go push(msgCtx, &model.Transport{
+				go push(msgCtx, id, &model.Transport{
 					Msg:   m,
 					Error: nil,
 				}, rev)
@@ -171,9 +108,7 @@ func receive(ctx context.Context, live *websocket.Conn, rev chan *model.Transpor
 		}
 	}
 }
-func push(ctx context.Context, tp *model.Transport, rev chan *model.Transport) {
-	id := ctx.Value("id").(string)
-
+func push(ctx context.Context, id string, tp *model.Transport, rev chan *model.Transport) {
 	t := time.NewTimer(5 * time.Second)
 	defer t.Stop()
 
