@@ -3,9 +3,9 @@ package egame
 import (
 	"fmt"
 	"github.com/guonaihong/gout"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/util"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	"github.com/tidwall/gjson"
 	"strings"
 )

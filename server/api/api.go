@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/pkg/e"
+	"github.com/iyear/pure-live/pkg/ecode"
 	"net/http"
 )
 
@@ -17,7 +17,7 @@ func RespFmt(c *gin.Context, code int, err error, data interface{}) {
 		Data interface{} `json:"data,omitempty"`
 	}
 
-	var msg = fmt.Sprintf("%s", e.GetMsg(code))
+	var msg = fmt.Sprintf("%s", ecode.GetMsg(code))
 	if err != nil {
 		msg += fmt.Sprintf(": %s", err.Error())
 	}

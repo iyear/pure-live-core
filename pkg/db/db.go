@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/sqlite"
 	"gorm.io/gorm"
 	"path"

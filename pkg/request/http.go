@@ -3,8 +3,8 @@ package request
 import (
 	"github.com/guonaihong/gout"
 	"github.com/guonaihong/gout/dataflow"
-	"github.com/iyear/pure-live/conf"
-	"github.com/iyear/pure-live/util"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	"net/http"
 )
 

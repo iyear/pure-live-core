@@ -1,9 +1,9 @@
 package srv_live
 
 import (
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/client"
+	"github.com/iyear/pure-live/pkg/conf"
 )
 
 func GetRoomInfo(plat string, room string) (*model.RoomInfo, error) {

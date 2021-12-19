@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/danmaku"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/push_msg"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/ws_cmd"
-	"github.com/iyear/pure-live/util"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	"strings"
 )
 
@@ -46,7 +46,7 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	link = strings.ReplaceAll(link, "m3u8", "flv")
 	return &model.PlayURL{
 		Qn:     qn,
-		Desc:   util.Qn2Desc(conf.QnBest),
+		Desc:   util.Qn2Desc(qn),
 		Origin: fmt.Sprintf("https:%s", link),
 		CORS:   false,
 		Type:   conf.StreamFlv,

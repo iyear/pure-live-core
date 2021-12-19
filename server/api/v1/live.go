@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/client"
-	"github.com/iyear/pure-live/pkg/e"
+	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/server/api"
 	"github.com/iyear/pure-live/service/srv_live"
 	"go.uber.org/zap"
@@ -21,7 +21,7 @@ func Serve(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err = c.ShouldBind(&req); err != nil {
-		api.RespFmt(c, e.InvalidParams, err, nil)
+		api.RespFmt(c, ecode.InvalidParams, err, nil)
 		return
 	}
 
@@ -52,7 +52,7 @@ func Serve(c *gin.Context) {
 	cli, err := client.GetClient(req.Plat)
 	if err != nil {
 		zap.S().Warnw("failed to get platform", "id", id, "error", err, "plat", req.Plat)
-		api.RespFmt(c, e.UnknownError, err, nil)
+		api.RespFmt(c, ecode.UnknownError, err, nil)
 		return
 	}
 	defer cli.Stop()
@@ -89,16 +89,16 @@ func GetPlayURL(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		api.RespFmt(c, e.InvalidParams, nil, nil)
+		api.RespFmt(c, ecode.InvalidParams, nil, nil)
 		return
 	}
 	url, err := srv_live.GetPlayURL(req.Plat, req.Room)
 	if err != nil {
-		api.RespFmt(c, e.ErrorGetPlayURL, err, nil)
+		api.RespFmt(c, ecode.ErrorGetPlayURL, err, nil)
 		zap.S().Warnw("failed to get play url", "error", err, "req", req)
 		return
 	}
-	api.RespFmt(c, e.Success, nil, url)
+	api.RespFmt(c, ecode.Success, nil, url)
 }
 func GetRoomInfo(c *gin.Context) {
 	req := struct {
@@ -106,16 +106,16 @@ func GetRoomInfo(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		api.RespFmt(c, e.InvalidParams, nil, nil)
+		api.RespFmt(c, ecode.InvalidParams, nil, nil)
 		return
 	}
 	info, err := srv_live.GetRoomInfo(req.Plat, req.Room)
 	if err != nil {
-		api.RespFmt(c, e.ErrorGetRoomInfo, err, nil)
+		api.RespFmt(c, ecode.ErrorGetRoomInfo, err, nil)
 		zap.S().Warnw("failed to get room info", "error", err, "req", req)
 		return
 	}
-	api.RespFmt(c, e.Success, nil, info)
+	api.RespFmt(c, ecode.Success, nil, info)
 }
 func SendDanmaku(c *gin.Context) {
 	req := struct {
@@ -125,13 +125,13 @@ func SendDanmaku(c *gin.Context) {
 		Color   int64  `form:"color" binding:"required" json:"color"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		api.RespFmt(c, e.InvalidParams, nil, nil)
+		api.RespFmt(c, ecode.InvalidParams, nil, nil)
 		return
 	}
 	if err := srv_live.SendDanmaku(req.ID, req.Content, req.Type, req.Color); err != nil {
 		zap.S().Warnw("failed to send danmaku", "error", err, "req", req)
-		api.RespFmt(c, e.ErrorSendDanmaku, err, nil)
+		api.RespFmt(c, ecode.ErrorSendDanmaku, err, nil)
 		return
 	}
-	api.RespFmt(c, e.Success, nil, nil)
+	api.RespFmt(c, ecode.Success, nil, nil)
 }

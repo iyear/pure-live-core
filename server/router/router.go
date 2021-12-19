@@ -2,10 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/conf"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	v12 "github.com/iyear/pure-live/server/api/v1"
 	middleware2 "github.com/iyear/pure-live/server/middleware"
-	"github.com/iyear/pure-live/util"
 )
 
 var r *gin.Engine

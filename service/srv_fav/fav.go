@@ -1,8 +1,8 @@
 package srv_fav
 
 import (
-	"github.com/iyear/pure-live/db"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/db"
 )
 
 func GetFav(id uint64) (*model.Favorite, error) {

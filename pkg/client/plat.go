@@ -2,11 +2,11 @@ package client
 
 import (
 	"fmt"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/client/internal/bilibili"
 	"github.com/iyear/pure-live/pkg/client/internal/douyu"
 	"github.com/iyear/pure-live/pkg/client/internal/huya"
+	"github.com/iyear/pure-live/pkg/conf"
 )
 
 func GetClient(plat string) (model.Client, error) {

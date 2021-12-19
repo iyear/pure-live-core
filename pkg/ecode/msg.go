@@ -1,4 +1,4 @@
-package e
+package ecode
 
 var msg = map[int]string{
 	Success:            "ok",

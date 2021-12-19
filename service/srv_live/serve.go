@@ -3,11 +3,11 @@ package srv_live
 import (
 	"context"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	"github.com/iyear/pure-live/server/api"
-	"github.com/iyear/pure-live/util"
 	"go.uber.org/zap"
 	"time"
 )
