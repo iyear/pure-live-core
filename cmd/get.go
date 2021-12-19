@@ -13,6 +13,7 @@ import (
 	"github.com/iyear/pure-live/pkg/util"
 	"github.com/iyear/pure-live/service/srv_live"
 	"github.com/q191201771/lal/pkg/httpflv"
+	"github.com/q191201771/naza/pkg/nazalog"
 	"github.com/spf13/cobra"
 	"github.com/xuri/excelize/v2"
 	"os"
@@ -120,6 +121,11 @@ func dlStream(ctx context.Context, tp string, url string) error {
 		return nil
 	}
 
+	// 关闭nazalog的输出
+	_ = nazalog.Init(func(option *nazalog.Option) {
+		option.IsToStdout = false
+	})
+
 	writer := httpflv.FlvFileWriter{}
 
 	if err := writer.Open(stream); err != nil {
@@ -142,6 +148,7 @@ func dlStream(ctx context.Context, tp string, url string) error {
 	if err = writer.Dispose(); err != nil {
 		return err
 	}
+	color.Yellow("Download Live Stream Succ...\n")
 	return nil
 }
 
@@ -185,7 +192,7 @@ func dlDanmaku(ctx context.Context) error {
 			if err = file.SaveAs(danmaku); err != nil {
 				return err
 			}
-			color.Blue("Download Live Danmaku Succ...\n")
+			color.Yellow("Download Live Danmaku Succ...\n")
 			return nil
 		case transport := <-rev:
 			if transport.Msg.Event() != conf.EventDanmaku {
@@ -193,7 +200,7 @@ func dlDanmaku(ctx context.Context) error {
 			}
 			dm := transport.Msg.(*model.MsgDanmaku)
 			if roll {
-				color.Blue("%s %d\n", dm.Content, dm.Color)
+				color.Cyan("%s %d\n", dm.Content, dm.Color)
 			}
 			cell, err := excelize.CoordinatesToCellName(1, count)
 			if err != nil {

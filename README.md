@@ -56,19 +56,24 @@ https://github.com/BacooTang/huya-danmu
 
 ### 命令行
 
-1. **获取直播流**
-
- `pure-live` 也支持命令行获取直播信息和直播流
+#### get 获取直播信息、直播流、弹幕流
 
 `-p` :平台名。涉及的平台参数在 [API文档](./docs/API.md#直播平台)  中查询
 
-`-r` : 房间号。长短号均可。
+`-r` : 房间号。长短号均可
 
-`-d` : 下载对应的直播流，不传入则不下载，传入文件名。
+`--stream` : 下载对应的直播流(暂时只支持 `flv`)，不传入则不下载，传入文件名
+
+`--danmaku` : 抓取对应的弹幕流，以 `xlsx` 格式保存，不传入则不抓取，传入文件名
+
+`--roll` : 抓取弹幕是否显示弹幕滚动信息
 
 ```sh
 ./pure-live get -p bilibili -r 6
-./pure-live get -p bilibili -r 6 -d b.flv
+./pure-live get -p bilibili -r 6 --stream b.flv
+./pure-live get -p bilibili -r 6 --stream b.flv --danmaku dm.xlsx
+./pure-live get -p bilibili -r 6 --danmaku dm.xlsx --roll
+./pure-live get -p bilibili -r 6 --stream b.flv --danmaku dm.xlsx --roll
 ```
 
 成功获得相关信息
