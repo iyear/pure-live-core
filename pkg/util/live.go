@@ -22,3 +22,14 @@ var mode2desc = map[int]string{
 func DmMode2Desc(mode int) string {
 	return mode2desc[mode]
 }
+
+var plat2desc = map[string]string{
+	conf.PlatBiliBili: "哔哩哔哩",
+	conf.PlatHuya:     "虎牙",
+	conf.PlatDouyu:    "斗鱼",
+	conf.PlatEGame:    "企鹅电竞",
+}
+
+func Plat2Desc(plat string) string {
+	return plat2desc[plat]
+}
