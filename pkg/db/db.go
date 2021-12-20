@@ -2,18 +2,16 @@ package db
 
 import (
 	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/sqlite"
 	"gorm.io/gorm"
-	"path"
 	"time"
 )
 
 var SQLite *gorm.DB
 
-func Init() error {
+func Init(path string) error {
 	var err error
-	SQLite, err = gorm.Open(sqlite.Open(path.Join(conf.C.Server.Path, "data.db")), &gorm.Config{
+	SQLite, err = gorm.Open(sqlite.Open(path), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NowFunc: func() time.Time {
 			return time.Now().UTC()

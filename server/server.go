@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
+	"path"
 )
 
 func Run(cfgFile string) {
@@ -27,7 +28,7 @@ func Run(cfgFile string) {
 		zap.S().Fatalw("failed to mkdir", "error", err)
 	}
 
-	if err := db.Init(); err != nil {
+	if err := db.Init(path.Join(conf.C.Server.Path, "data.db")); err != nil {
 		zap.S().Fatalw("failed to init database", "error", err)
 	}
 	zap.S().Infof("init database succ...")
