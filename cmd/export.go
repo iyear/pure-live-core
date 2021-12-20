@@ -17,8 +17,8 @@ var saveFile string
 // exportCmd represents the run command
 var exportCmd = &cobra.Command{
 	Use:   "export",
-	Short: "Start the local server",
-	Long:  `Start the local server`,
+	Short: "Export Favorites And Favorites List Information",
+	Long:  `Export Favorites And Favorites List Information`,
 	Run: func(cmd *cobra.Command, args []string) {
 		export()
 	},
