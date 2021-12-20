@@ -56,7 +56,7 @@ chmod +x ./pure-live
 ./pure-live -h
 ./pure-live run -h
 ./pure-live get -h
-......
+./pure-live export -h
 ```
 
 ### run
@@ -100,6 +100,19 @@ Link: https://live.bilibili.com/7734200
 Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516950.flv?cdn=cn-gotch......
 ```
 
+### export
+#### 导出收藏及收藏夹信息
+
+`-d` : 数据库路径。默认 `data/data.db`
+
+`-p` : 导出路径。默认 `export.xlsx`
+
+```shell
+./pure-live export
+./pure-live export -d mydata/data.db
+./pure-live export -d mydata/data.db -p mydata.xlsx
+```
+
 ## 📝 文档
 
 如何写一个自己的前端? [API文档](./docs/API.md)
@@ -128,7 +141,7 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [ ] 弹幕JSON保存
 - [ ] 弹幕ASS保存
 
-## 参考
+## 🗒️ 参考
 
 https://github.com/wbt5/real-url
 
