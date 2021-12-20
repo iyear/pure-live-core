@@ -1,6 +1,6 @@
 ![](https://socialify.git.ci/iyear/biligo/image?description=1&font=Raleway&forks=1&issues=1&logo=https://s4.ax1x.com/2021/12/06/orLSGF.png&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark)
 
-## 简介
+## 🎉 简介
 
 ![](https://img.shields.io/github/go-mod/go-version/iyear/biligo?style=flat-square)
 ![](https://img.shields.io/badge/license-GPL-lightgrey.svg?style=flat-square)
@@ -15,22 +15,14 @@
 
 ## ✨ 特性
 
-- 直播间信息获取、直播流获取、发送弹幕
-- 平台 `Websocket` 协议封装，支持转发弹幕消息、直播间热度消息
-- 解决跨域问题，支持直播流本地转发
-- 简易的收藏夹功能支持
-- 支持设置 `Socks5` 代理 (未测试)
-- 良好的项目结构设计，解耦直播平台和核心功能
-- 同时它也是一个简单的命令行工具。
+- 🔎   直播间信息获取、直播流获取、发送弹幕
+- ⌛    平台 `Websocket` 协议封装，支持转发弹幕消息、直播间热度消息
+- 🗝️   解决跨域问题，支持直播流本地转发
+- 📂   简易的收藏夹功能支持
+- 🔨   支持设置 `Socks5` 代理 (未测试)
+- 🧱   良好的项目结构设计，解耦直播平台和核心功能
+- ⚙️ 同时它也是一个简单的命令行工具。
 - ......
-
-### 参考
-
-https://github.com/wbt5/real-url
-
-https://github.com/flxxyz/douyudm
-
-https://github.com/BacooTang/huya-danmu
 
 ## 🛠️ 部署
 
@@ -56,7 +48,7 @@ chmod +x ./pure-live
 
 - ......
 
-## ⚙️命令行
+## ⚙️ 命令行
 
 ### get
 #### 获取直播信息、直播流、弹幕流
@@ -111,6 +103,14 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [x] 哔哩哔哩
 - [ ] 虎牙
 - [ ] 斗鱼
+
+## 参考
+
+https://github.com/wbt5/real-url
+
+https://github.com/flxxyz/douyudm
+
+https://github.com/BacooTang/huya-danmu
 
 ## 🔖 LICENSE
 
