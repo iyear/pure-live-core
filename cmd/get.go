@@ -170,7 +170,9 @@ func dlDanmaku(ctx context.Context) error {
 	}
 
 	file := excelize.NewFile()
-	writer, err := file.NewStreamWriter("Sheet1")
+	file.NewSheet("弹幕")
+	file.DeleteSheet("Sheet1")
+	writer, err := file.NewStreamWriter("弹幕")
 	if err != nil {
 		return err
 	}
