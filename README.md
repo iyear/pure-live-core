@@ -30,13 +30,14 @@
 
 下载 [Release](https://baidu.com) 的最新打包文件，解压后重命名 `config.yaml.example` 为 `config.yaml` ，填写相关信息。
 
-```sh
+```shell
 chmod +x ./pure-live
 ./pure-live run
 ```
 
 打开对应的本地地址 `localhost:<port>` ，即可看到前端界面，开始使用 `pure-live` 吧！
 
+`pure-live` 的初衷是本地或局域网的直播流推送，对于 `websocket` 推送没有做压缩或优化处理。
 ### 前端
 `Release` 都已经内置了默认的前端页面
 
@@ -49,6 +50,24 @@ chmod +x ./pure-live
 - ......
 
 ## ⚙️ 命令行
+
+查看帮助:
+```shell
+./pure-live -h
+./pure-live run -h
+./pure-live get -h
+......
+```
+
+### run
+#### 启动本地服务器
+
+`-c` : 配置文件路径，默认为 `config.yaml`
+
+```shell
+./pure-live run
+./pure-live run -c myconf.yml
+```
 
 ### get
 #### 获取直播信息、直播流、弹幕流
@@ -63,7 +82,7 @@ chmod +x ./pure-live
 
 `--roll` : 抓取弹幕是否显示弹幕滚动信息
 
-```sh
+```shell
 ./pure-live get -p bilibili -r 6
 ./pure-live get -p bilibili -r 6 --stream b.flv
 ./pure-live get -p bilibili -r 6 --stream b.flv --danmaku dm.xlsx
