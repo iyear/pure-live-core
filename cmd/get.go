@@ -33,8 +33,8 @@ var (
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
-	Short: "get info",
-	Long:  `get info`,
+	Short: "Get live info",
+	Long:  `Get live information, live stream, and danmaku stream`,
 	Run: func(cmd *cobra.Command, args []string) {
 		get()
 	},
@@ -148,7 +148,7 @@ func dlStream(ctx context.Context, tp string, url string) error {
 	if err = writer.Dispose(); err != nil {
 		return err
 	}
-	color.Yellow("Download Live Stream Succ...\n")
+	color.Blue("[INFO] Download Live Stream Succ...\n")
 	return nil
 }
 
@@ -192,7 +192,7 @@ func dlDanmaku(ctx context.Context) error {
 			if err = file.SaveAs(danmaku); err != nil {
 				return err
 			}
-			color.Yellow("Download Live Danmaku Succ...\n")
+			color.Blue("[INFO] Download Live Danmaku Succ...\n")
 			return nil
 		case transport := <-rev:
 			if transport.Msg.Event() != conf.EventDanmaku {
