@@ -123,6 +123,11 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [ ] 虎牙
 - [ ] 斗鱼
 
+### get
+
+- [ ] 弹幕JSON保存
+- [ ] 弹幕ASS保存
+
 ## 参考
 
 https://github.com/wbt5/real-url
