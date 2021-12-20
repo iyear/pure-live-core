@@ -13,7 +13,7 @@
 
 没有礼物、粉丝团、弹窗，只有直播、弹幕
 
-### 特性
+## ✨ 特性
 
 - 直播间信息获取、直播流获取、发送弹幕
 - 平台 `Websocket` 协议封装，支持转发弹幕消息、直播间热度消息
@@ -32,19 +32,21 @@ https://github.com/flxxyz/douyudm
 
 https://github.com/BacooTang/huya-danmu
 
-## 使用
+## 🛠️ 部署
 
-### 快速开始
+### 后端
 
 下载 [Release](https://baidu.com) 的最新打包文件，解压后重命名 `config.yaml.example` 为 `config.yaml` ，填写相关信息。
 
 ```sh
+chmod +x ./pure-live
 ./pure-live run
 ```
 
 打开对应的本地地址 `localhost:<port>` ，即可看到前端界面，开始使用 `pure-live` 吧！
 
 ### 前端
+`Release` 都已经内置了默认的前端页面
 
 前端自己快速看了一下 `Vue` 一把梭写出来的，仅仅是能用的水平，代码结构也很庞杂凌乱，期待更好的第三方前端页面出现。
 
@@ -54,9 +56,10 @@ https://github.com/BacooTang/huya-danmu
 
 - ......
 
-### 命令行
+## ⚙️命令行
 
-#### get 获取直播信息、直播流、弹幕流
+### get
+#### 获取直播信息、直播流、弹幕流
 
 `-p` :平台名。涉及的平台参数在 [API文档](./docs/API.md#直播平台)  中查询
 
@@ -86,13 +89,13 @@ Link: https://live.bilibili.com/7734200
 Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516950.flv?cdn=cn-gotch......
 ```
 
-## 文档
+## 📝 文档
 
 如何写一个自己的前端? [API文档](./docs/API.md)
 
 如何添加新的平台支持? [Client文档](./docs/Client.md)
 
-## TODO
+## 🔌 TODO
 
 ### 基本直播功能(直播流+弹幕接收)
 
@@ -108,3 +111,7 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [x] 哔哩哔哩
 - [ ] 虎牙
 - [ ] 斗鱼
+
+## 🔖 LICENSE
+
+GPL-3.0 License
