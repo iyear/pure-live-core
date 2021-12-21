@@ -17,6 +17,8 @@ func Init() *gin.Engine {
 	r.Use(middleware.Recovery())
 	r.Use(middleware.CORS())
 	r.Use(middleware.Static())
+	// SPA需要设置此中间件，将404重新返回单页面入口，vue-router便会再次重定向回对应uri的页面
+	r.NoRoute(middleware.NoRoute())
 
 	g := r.Group("/api")
 	apiV1 := g.Group("/v1")
