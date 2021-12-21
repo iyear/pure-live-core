@@ -5,9 +5,6 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags: -s -w
-    hooks:
-      post:
-        - upx --best "{{ .Path }}"
     goos:
       - linux
       - windows
