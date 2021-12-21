@@ -46,7 +46,7 @@ func SendDanmaku(c *gin.Context) {
 	req := struct {
 		ID      string `form:"id" binding:"required,uuid"` // 服务端分发的uuid
 		Content string `form:"content" binding:"required" json:"content"`
-		Type    int    `form:"type" binding:"required,gte=0,lte=2" json:"type"` // 1:顶部 0:滚动 2:底部
+		Type    int    `form:"type" binding:"gte=0,lte=2" json:"type"` // 1:顶部 0:滚动 2:底部
 		Color   int64  `form:"color" binding:"required" json:"color"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
