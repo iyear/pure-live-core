@@ -7,6 +7,7 @@ import (
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/db"
+	"github.com/iyear/pure-live/pkg/request"
 	"github.com/iyear/pure-live/pkg/util"
 	"github.com/q191201771/naza/pkg/nazalog"
 	"go.uber.org/zap"
@@ -35,6 +36,10 @@ func Run(cfgFile string) {
 	}
 	global.DB = sqlite
 	zap.S().Infof("init database succ...")
+
+	if conf.C.Socks5.Enable {
+		request.SetSocks5(conf.C.Socks5.Host, conf.C.Socks5.Port, conf.C.Socks5.User, conf.C.Socks5.Password)
+	}
 
 	zap.S().Infof("server runs on :%d,debug: %v", conf.C.Server.Port, conf.C.Server.Debug)
 	engine := router.Init()
