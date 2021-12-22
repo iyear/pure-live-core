@@ -3,6 +3,7 @@ dist
 log
 data
 config.yaml
+account.yaml
 *.exe
 bin
 static
