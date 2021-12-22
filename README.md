@@ -39,7 +39,9 @@
 
 ### 后端
 
-下载 [Release](https://baidu.com) 的最新打包文件，解压后重命名 `config.yaml.example` 为 `config.yaml` ，填写相关信息。
+下载 [Release](https://baidu.com) 的最新打包文件
+
+解压后重命名 `config` 目录下的 `server.yaml.example` 为 `server.yaml` , `config/account.yaml.example` 为 `account.yaml` ,填写相关信息。
 
 ```shell
 chmod +x ./pure-live
@@ -77,11 +79,14 @@ chmod +x ./pure-live
 ### run
 #### 启动本地服务器
 
-`-c` : 配置文件路径，默认为 `config.yaml`
+`-s` : 服务器配置文件路径，默认为 `config/server.yaml`
+
+`-a` : 账号配置文件路径，默认为 `config/account.yaml`
 
 ```shell
 ./pure-live run
-./pure-live run -c myconf.yml
+./pure-live run -s myserver.yml
+./pure-live run -s my/myserver.yml -a my/myaccount.yml
 ```
 
 ### get
