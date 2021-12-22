@@ -23,6 +23,6 @@ var runCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(runCmd)
 
-	runCmd.PersistentFlags().StringVarP(&serverCfg, "server", "s", "server.yaml", "server config file")
-	runCmd.PersistentFlags().StringVarP(&accountCfg, "account", "a", "account.yaml", "account config file")
+	runCmd.PersistentFlags().StringVarP(&serverCfg, "server", "s", "config/server.yaml", "server config file")
+	runCmd.PersistentFlags().StringVarP(&accountCfg, "account", "a", "config/account.yaml", "account config file")
 }

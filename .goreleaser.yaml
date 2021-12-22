@@ -43,8 +43,8 @@ archives:
         format: zip
     files:
       - README.md
-      - server.yaml.example
-      - account.yaml.example
+      - config/server.yaml.example
+      - config/account.yaml.example
       - LICENSE
       - static
 snapshot:
