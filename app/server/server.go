@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
+	"github.com/iyear/pure-live/app/server/internal/logger"
+	"github.com/iyear/pure-live/app/server/internal/router"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/db"
 	"github.com/iyear/pure-live/pkg/util"
-	"github.com/iyear/pure-live/server/internal/logger"
-	"github.com/iyear/pure-live/server/internal/router"
 	"github.com/q191201771/naza/pkg/nazalog"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
