@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/iyear/pure-live/app/server/internal/config"
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/client"
 	"github.com/iyear/pure-live/pkg/conf"
@@ -60,8 +61,8 @@ func Serve(c *gin.Context) {
 	zap.S().Infow("start serving...", "id", id, "room", req.Room, "plat", req.Plat)
 
 	dialer := websocket.DefaultDialer
-	if conf.Server.Socks5.Enable {
-		dialer.NetDial = util.MustGetSocks5(conf.Server.Socks5.Host, conf.Server.Socks5.Port, conf.Server.Socks5.User, conf.Server.Socks5.Password).Dial
+	if config.Server.Socks5.Enable {
+		dialer.NetDial = util.MustGetSocks5(config.Server.Socks5.Host, config.Server.Socks5.Port, config.Server.Socks5.User, config.Server.Socks5.Password).Dial
 	}
 
 	rev, err := srv_live.Serve(ctx, dialer, id, cli, req.Room)
