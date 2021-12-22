@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
 	"github.com/iyear/pure-live/service/srv_live"
@@ -53,7 +55,14 @@ func SendDanmaku(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, nil, nil)
 		return
 	}
-	if err := srv_live.SendDanmaku(req.ID, req.Content, req.Type, req.Color); err != nil {
+
+	conn, err := global.GetConn(req.ID)
+	if err != nil {
+		format.HTTP(c, ecode.UnknownError, fmt.Errorf("can not get global conn"), nil)
+		return
+	}
+
+	if err = srv_live.SendDanmaku(conn.Client, conn.Room, req.Content, req.Type, req.Color); err != nil {
 		zap.S().Warnw("failed to send danmaku", "error", err, "req", req)
 		format.HTTP(c, ecode.ErrorSendDanmaku, err, nil)
 		return
