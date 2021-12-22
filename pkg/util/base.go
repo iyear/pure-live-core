@@ -45,7 +45,7 @@ func MustGetSocks5(host string, port int, user, password string) proxy.Dialer {
 		Password: password,
 	}, proxy.Direct)
 	if err != nil {
-		panic(fmt.Errorf("failed to get socks5 proxy: %s", err))
+		return &net.Dialer{}
 	}
 	return dialer
 }
