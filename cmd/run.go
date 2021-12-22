@@ -5,7 +5,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cfgFile string
+var (
+	serverCfg  string
+	accountCfg string
+)
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -13,13 +16,13 @@ var runCmd = &cobra.Command{
 	Short: "Start the local server",
 	Long:  `Start the local server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server.Run(cfgFile)
+		server.Run(serverCfg, accountCfg)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(runCmd)
 
-	runCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "config.yaml", "config file")
-
+	runCmd.PersistentFlags().StringVarP(&serverCfg, "server", "s", "server.yaml", "server config file")
+	runCmd.PersistentFlags().StringVarP(&accountCfg, "account", "a", "account.yaml", "account config file")
 }

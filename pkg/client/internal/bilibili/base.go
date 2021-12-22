@@ -11,21 +11,21 @@ import (
 type base struct{}
 
 func NewBiliBili() (model.Client, error) {
-	if !conf.C.Account.BiliBili.Enable {
+	if !conf.Account.BiliBili.Enable {
 		return &BiliComm{
 			client: biligo.NewCommClient(&biligo.CommSetting{
-				DebugMode: conf.C.Server.Debug,
+				DebugMode: false,
 			}),
 		}, nil
 	}
 	b, err := biligo.NewBiliClient(&biligo.BiliSetting{
 		Auth: &biligo.CookieAuth{
-			DedeUserID:      conf.C.Account.BiliBili.DedeUserID,
-			DedeUserIDCkMd5: conf.C.Account.BiliBili.DedeUserIDCkMd5,
-			SESSDATA:        conf.C.Account.BiliBili.SESSDATA,
-			BiliJCT:         conf.C.Account.BiliBili.BiliJCT,
+			DedeUserID:      conf.Account.BiliBili.DedeUserID,
+			DedeUserIDCkMd5: conf.Account.BiliBili.DedeUserIDCkMd5,
+			SESSDATA:        conf.Account.BiliBili.SESSDATA,
+			BiliJCT:         conf.Account.BiliBili.BiliJCT,
 		},
-		DebugMode: conf.C.Server.Debug,
+		DebugMode: false,
 	})
 	if err != nil {
 		return nil, err

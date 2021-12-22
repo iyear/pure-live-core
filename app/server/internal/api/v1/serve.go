@@ -60,8 +60,8 @@ func Serve(c *gin.Context) {
 	zap.S().Infow("start serving...", "id", id, "room", req.Room, "plat", req.Plat)
 
 	dialer := websocket.DefaultDialer
-	if conf.C.Socks5.Enable {
-		dialer.NetDial = util.MustGetSocks5(conf.C.Socks5.Host, conf.C.Socks5.Port, conf.C.Socks5.User, conf.C.Socks5.Password).Dial
+	if conf.Server.Socks5.Enable {
+		dialer.NetDial = util.MustGetSocks5(conf.Server.Socks5.Host, conf.Server.Socks5.Port, conf.Server.Socks5.User, conf.Server.Socks5.Password).Dial
 	}
 
 	rev, err := srv_live.Serve(ctx, dialer, id, cli, req.Room)

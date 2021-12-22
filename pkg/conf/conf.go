@@ -2,25 +2,35 @@ package conf
 
 import (
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
-	"log"
 )
 
-var C config
+var (
+	Server  server
+	Account account
+)
 
-func Init(file string) {
+func InitServer(path string) error {
 	c := viper.New()
-	c.SetConfigFile(file)
-	// If a config file is found, read it in.
+	c.SetConfigFile(path)
 	if err := c.ReadInConfig(); err != nil {
-		log.Fatalf("cannot read in config, file: %s", c.ConfigFileUsed())
-		return
+		return err
+	}
+	if err := c.Unmarshal(&Server); err != nil {
+		return err
 	}
 
-	if err := c.Unmarshal(&C); err != nil {
-		zap.S().Fatalw("cannot unmarshal config", "file", c.ConfigFileUsed(), "error", err)
-		return
+	return nil
+}
+
+func InitAccount(path string) error {
+	c := viper.New()
+	c.SetConfigFile(path)
+	if err := c.ReadInConfig(); err != nil {
+		return err
+	}
+	if err := c.Unmarshal(&Account); err != nil {
+		return err
 	}
 
-	zap.S().Infof("read in config succ...")
+	return nil
 }

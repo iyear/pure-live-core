@@ -1,14 +1,10 @@
 package conf
 
-type config struct {
-	Server  server  `mapstructure:"server"`
-	Socks5  socks5  `mapstructure:"socks5"`
-	Account account `mapstructure:"account"`
-}
 type server struct {
-	Port  int    `mapstructure:"port"`
-	Debug bool   `mapstructure:"debug"`
-	Path  string `mapstructure:"path"`
+	Port   int    `mapstructure:"port"`
+	Debug  bool   `mapstructure:"debug"`
+	Path   string `mapstructure:"path"`
+	Socks5 socks5 `mapstructure:"socks5"`
 }
 
 type account struct {

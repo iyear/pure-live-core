@@ -12,40 +12,48 @@ import (
 	"github.com/q191201771/naza/pkg/nazalog"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"log"
 	"os"
 	"path"
 )
 
-func Run(cfgFile string) {
+func Run(serverConf string, accountConf string) {
 	// lal包中的nazalog
 	_ = nazalog.Init(func(option *nazalog.Option) {
-		option.IsToStdout = conf.C.Server.Debug
+		option.IsToStdout = conf.Server.Debug
 	})
 
-	conf.Init(cfgFile)
-	logger.Init(util.IF(conf.C.Server.Debug, zapcore.DebugLevel, zapcore.InfoLevel).(zapcore.LevelEnabler))
+	if err := conf.InitServer(serverConf); err != nil {
+		log.Fatalf("failed to read server config: %s", err)
+	}
+	if err := conf.InitAccount(accountConf); err != nil {
+		log.Fatalf("failed to read account config: %s", err)
+	}
 
-	zap.S().Infof("init server...")
-	if err := os.MkdirAll(conf.C.Server.Path, 0774); err != nil {
+	logger.Init(util.IF(conf.Server.Debug, zapcore.DebugLevel, zapcore.InfoLevel).(zapcore.LevelEnabler))
+
+	zap.S().Infof("read config succ...")
+
+	if err := os.MkdirAll(conf.Server.Path, 0774); err != nil {
 		zap.S().Fatalw("failed to mkdir", "error", err)
 	}
 
-	sqlite, err := db.Init(path.Join(conf.C.Server.Path, "data.db"))
+	sqlite, err := db.Init(path.Join(conf.Server.Path, "data.db"))
 	if err != nil {
 		zap.S().Fatalw("failed to init database", "error", err)
 	}
 	global.DB = sqlite
 	zap.S().Infof("init database succ...")
 
-	if conf.C.Socks5.Enable {
-		request.SetSocks5(conf.C.Socks5.Host, conf.C.Socks5.Port, conf.C.Socks5.User, conf.C.Socks5.Password)
+	if conf.Server.Socks5.Enable {
+		request.SetSocks5(conf.Server.Socks5.Host, conf.Server.Socks5.Port, conf.Server.Socks5.User, conf.Server.Socks5.Password)
 	}
 
-	zap.S().Infof("server runs on :%d,debug: %v", conf.C.Server.Port, conf.C.Server.Debug)
+	zap.S().Infof("server runs on :%d,debug: %v", conf.Server.Port, conf.Server.Debug)
 	engine := router.Init()
 
-	if err = engine.Run(fmt.Sprintf(":%d", conf.C.Server.Port)); err != nil {
-		zap.S().Fatalw("failed to run gin engine", "error", err, "port", conf.C.Server.Port)
+	if err = engine.Run(fmt.Sprintf(":%d", conf.Server.Port)); err != nil {
+		zap.S().Fatalw("failed to run gin engine", "error", err, "port", conf.Server.Port)
 		return
 	}
 }
