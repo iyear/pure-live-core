@@ -21,14 +21,15 @@ func Export(dbPath string, savePath string) {
 		return
 	}
 
-	if err := db.Init(dbPath); err != nil {
+	sqlite, err := db.Init(dbPath)
+	if err != nil {
 		color.Red("[ERROR] failed to init db.ERROR: %s", err)
 		return
 	}
 
 	var lists []*model.FavoritesList
 
-	if err := db.SQLite.Find(&lists).Error; err != nil {
+	if err = sqlite.Find(&lists).Error; err != nil {
 		color.Red("[ERROR] failed to get fav lists.ERROR: %s", err)
 		return
 	}
@@ -63,7 +64,7 @@ func Export(dbPath string, savePath string) {
 		})
 
 		var favs []*model.Favorite
-		if err = db.SQLite.Where("fid = ?", list.ID).Find(&favs).Error; err != nil {
+		if err = sqlite.Where("fid = ?", list.ID).Find(&favs).Error; err != nil {
 			color.Red("[ERROR] failed to get favs.ERROR: %s", err)
 			return
 		}

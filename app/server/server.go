@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/iyear/pure-live/app/server/internal/logger"
 	"github.com/iyear/pure-live/app/server/internal/router"
+	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/db"
 	"github.com/iyear/pure-live/pkg/util"
@@ -28,15 +29,17 @@ func Run(cfgFile string) {
 		zap.S().Fatalw("failed to mkdir", "error", err)
 	}
 
-	if err := db.Init(path.Join(conf.C.Server.Path, "data.db")); err != nil {
+	sqlite, err := db.Init(path.Join(conf.C.Server.Path, "data.db"))
+	if err != nil {
 		zap.S().Fatalw("failed to init database", "error", err)
 	}
+	global.DB = sqlite
 	zap.S().Infof("init database succ...")
 
 	zap.S().Infof("server runs on :%d,debug: %v", conf.C.Server.Port, conf.C.Server.Debug)
 	engine := router.Init()
-	err := engine.Run(fmt.Sprintf(":%d", conf.C.Server.Port))
-	if err != nil {
+
+	if err = engine.Run(fmt.Sprintf(":%d", conf.C.Server.Port)); err != nil {
 		zap.S().Fatalw("failed to run gin engine", "error", err, "port", conf.C.Server.Port)
 		return
 	}
