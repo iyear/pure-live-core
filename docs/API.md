@@ -16,6 +16,26 @@
 
 所有参数后端没有默认值，即前端均需传入一个确定的值
 
+## 版本检查
+
+### GetVersion 获取core版本信息
+
+> GET /api/version
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "runtime": "go1.17.3 windows/amd64",
+    "ver": "v0.1.0"
+  }
+}
+```
+
+
 ## 直播信息类
 
 ### GetRoomInfo 获取直播间信息
