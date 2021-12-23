@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/iyear/pure-live/app/server/internal/api"
 	"github.com/iyear/pure-live/app/server/internal/api/v1"
 	"github.com/iyear/pure-live/app/server/internal/config"
 	"github.com/iyear/pure-live/app/server/internal/middleware"
@@ -21,6 +22,8 @@ func Init() *gin.Engine {
 	r.NoRoute(middleware.NoRoute())
 
 	g := r.Group("/api")
+	g.GET("/version", api.GetVersion)
+
 	apiV1 := g.Group("/v1")
 	{
 		apiV1.GET("/live/serve", v1.Serve)
