@@ -17,4 +17,10 @@ const (
 	ErrorDelFav        = 10010
 	ErrorEditFav       = 10011
 	ErrorGetFav        = 10012
+	ErrorGetSysMem     = 10013
+	ErrorGetSelfMem    = 10014
+	ErrorGetSysCPU     = 10015
+	ErrorGetSelfCPU    = 10016
+	ErrorGetOSInfo     = 10017
+	ErrorGetOsAll      = 10018
 )

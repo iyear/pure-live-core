@@ -39,6 +39,13 @@ func Init() *gin.Engine {
 		apiV1.POST("/fav/add", v1.AddFav)
 		apiV1.POST("/fav/del", v1.DelFav)
 		apiV1.POST("/fav/edit", v1.EditFav)
+
+		apiV1.GET("/os/info", v1.GetOSInfo)
+		apiV1.GET("/os/all", v1.GetOSAll)
+		apiV1.GET("/os/mem/sys", v1.GetSysMem)
+		apiV1.GET("/os/mem/self", v1.GetSelfMem)
+		apiV1.GET("/os/cpu/sys", v1.GetSysCPU)
+		apiV1.GET("/os/cpu/self", v1.GetSelfCPU)
 	}
 
 	return r

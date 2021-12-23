@@ -17,6 +17,12 @@ var msg = map[int]string{
 	ErrorDelFav:        "failed to del fav",
 	ErrorEditFav:       "failed to edit fav",
 	ErrorGetFav:        "failed to get fav",
+	ErrorGetSysMem:     "failed to get sys mem",
+	ErrorGetSelfMem:    "failed to get self mem",
+	ErrorGetSysCPU:     "failed to get sys cpu",
+	ErrorGetSelfCPU:    "failed to get self cpu",
+	ErrorGetOSInfo:     "failed to get os info",
+	ErrorGetOsAll:      "failed to get all os info",
 }
 
 func GetMsg(code int) string {
