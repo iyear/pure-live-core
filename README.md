@@ -67,6 +67,15 @@ chmod +x ./pure-live
 - ......
 
 ## ⚙️ 命令行
+查看版本:
+```shell
+./pure-lie -v
+```
+
+```
+v0.1.0.211224-beta
+go1.17.3 windows/amd64
+```
 
 查看帮助:
 ```shell
