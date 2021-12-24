@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"github.com/iyear/pure-live/app/server/internal/config"
 	"github.com/iyear/pure-live/app/server/internal/logger"
@@ -14,8 +15,12 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
 	"path"
+	"syscall"
+	"time"
 )
 
 func Run(serverConf string, accountConf string) {
@@ -51,10 +56,31 @@ func Run(serverConf string, accountConf string) {
 	}
 
 	zap.S().Infof("server runs on :%d,debug: %v", config.Server.Port, config.Server.Debug)
-	engine := router.Init()
 
-	if err = engine.Run(fmt.Sprintf(":%d", config.Server.Port)); err != nil {
-		zap.S().Fatalw("failed to run gin engine", "error", err, "port", config.Server.Port)
-		return
+	handler := router.Init()
+
+	s := &http.Server{
+		Addr:    fmt.Sprintf(":%d", config.Server.Port),
+		Handler: handler,
 	}
+
+	go func() {
+		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			zap.S().Infow("failed to start to listen and serve", "error", err, "port", config.Server.Port)
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	zap.S().Info("shutdown server...")
+
+	ctx, stop := context.WithTimeout(context.Background(), 5*time.Second)
+	defer stop()
+
+	if err = s.Shutdown(ctx); err != nil {
+		zap.S().Fatalw("server forced to shutdown", "error", err)
+	}
+
+	zap.S().Infow("server exited...")
 }
