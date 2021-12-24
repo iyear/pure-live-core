@@ -6,17 +6,16 @@ import (
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/danmaku"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/push_msg"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/ws_cmd"
-	"github.com/iyear/pure-live/util"
+	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live/pkg/util"
 	"strings"
 )
 
-const wsHost = "wss://cdnws.api.huya.com/"
 const hb = "00031d0000690000006910032c3c4c56086f6e6c696e657569660f4f6e557365724865617274426561747d00003c0800010604745265711d00002f0a0a0c1600260036076164725f77617046000b1203aef00f2203aef00f3c426d5202605c60017c82000bb01f9cac0b8c980ca80c20"
 
 type Huya struct{}
@@ -47,7 +46,7 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	link = strings.ReplaceAll(link, "m3u8", "flv")
 	return &model.PlayURL{
 		Qn:     qn,
-		Desc:   util.Qn2Desc(conf.QnBest),
+		Desc:   util.Qn2Desc(qn),
 		Origin: fmt.Sprintf("https:%s", link),
 		CORS:   false,
 		Type:   conf.StreamFlv,
@@ -69,7 +68,7 @@ func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 func (h *Huya) Host() string {
-	return wsHost
+	return "wss://cdnws.api.huya.com/"
 }
 
 func (h *Huya) Enter(room string) (int, [][]byte, error) {

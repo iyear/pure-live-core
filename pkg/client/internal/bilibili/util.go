@@ -5,7 +5,7 @@ import (
 	"compress/zlib"
 	"encoding/binary"
 	"github.com/andybalholm/brotli"
-	"github.com/iyear/pure-live/conf"
+	"github.com/iyear/pure-live/pkg/conf"
 	"io"
 )
 
@@ -16,9 +16,6 @@ const (
 	wsOpMessage          = 5 // 弹幕消息等
 	wsOpEnterRoom        = 7 // 请求进入房间
 	wsOpEnterRoomSuccess = 8 // 进房回应
-)
-const (
-	wsDefaultHost = "wss://broadcastlv.chat.bilibili.com/sub"
 )
 
 // Header

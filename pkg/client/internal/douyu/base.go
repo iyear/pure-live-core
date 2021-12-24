@@ -6,10 +6,10 @@ import (
 	"github.com/dop251/goja"
 	"github.com/gorilla/websocket"
 	"github.com/guonaihong/gout"
-	"github.com/iyear/pure-live/conf"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/request"
-	"github.com/iyear/pure-live/util"
+	"github.com/iyear/pure-live/pkg/util"
 	"github.com/tidwall/gjson"
 	"regexp"
 	"strconv"
@@ -18,8 +18,6 @@ import (
 )
 
 type Douyu struct{}
-
-const wsDefaultHost = "wss://danmuproxy.douyu.com:8503/"
 
 func NewDouyu() (model.Client, error) {
 	return &Douyu{}, nil
@@ -166,7 +164,7 @@ func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 func (d *Douyu) Host() string {
-	return wsDefaultHost
+	return "wss://danmuproxy.douyu.com:8503/"
 }
 
 func (d *Douyu) Enter(room string) (int, [][]byte, error) {

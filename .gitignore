@@ -2,7 +2,8 @@ dist
 .idea
 log
 data
-config.yaml
+config/server.yaml
+config/account.yaml
 *.exe
 bin
 static

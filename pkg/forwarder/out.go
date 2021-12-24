@@ -16,7 +16,8 @@ func OutLoop(conn net.Conn, pullURL string, rawURL string, in In) error {
 	sub.WriteHttpResponseHeader()
 	sub.WriteFlvHeader()
 
-	if err = in.Pull(
+	if err = Pull(
+		in,
 		pullURL,
 		func(tag httpflv.Tag) {
 			sub.Write(tag.Raw)
@@ -29,4 +30,8 @@ func OutLoop(conn net.Conn, pullURL string, rawURL string, in In) error {
 		return err
 	}
 	return nil
+}
+
+func Pull(in In, pullURL string, fn func(tag httpflv.Tag)) error {
+	return in.Pull(pullURL, fn)
 }

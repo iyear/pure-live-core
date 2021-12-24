@@ -12,6 +12,29 @@
 |   huya   |   虎牙   |
 |  douyu   |   斗鱼   |
 
+## 参数说明
+
+所有参数后端没有默认值，即前端均需传入一个确定的值
+
+## 版本检查
+
+### GetVersion 获取core版本信息
+
+> GET /api/version
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "runtime": "go1.17.3 windows/amd64",
+    "ver": "v0.1.0"
+  }
+}
+```
+
 
 ## 直播信息类
 
@@ -36,13 +59,14 @@
   "msg": "ok",
   "data": {
     "status": 1,
-    "room": "763679", 
+    "room": "763679",
     "upper": "老骚豆腐",
-    "link": "https://live.bilibili.com/763679", 
-    "title": "【豆腐】杀鸡+第五+躲猫猫！新游！" 
+    "link": "https://live.bilibili.com/763679",
+    "title": "【豆腐】杀鸡+第五+躲猫猫！新游！"
   }
 }
 ```
+
 status 开播情况 0:未开播 1:开播
 
 room 真实房间号
@@ -83,19 +107,20 @@ title 直播间标题
   }
 }
 ```
+
 qn 清晰度，暂时无切换清晰度功能
 
 desc 清晰度描述，暂时无切换清晰度功能
 
 origin 直播流地址
 
-cors 是否有跨域问题 true:有 false:无 若为true必须通过本地流量转发才能播放，若为false直接播放或本地转发均可
+cors 是否有跨域限制 true:有 false:无 若为true必须通过本地流量转发才能播放，若为false直接播放或本地转发均可
 
 type 直播流编码格式
 
 ### Play 直播流本地转发
 
-一些直播流开启了防盗链，获取的直播流无法直接在播放器内加载，所以 `core` 提供了本地的流量转发功能。
+一些直播流开启了跨域限制，获取的直播流无法直接在前端加载，所以 `core` 提供了本地的流量转发功能。
 
 > GET /api/v1/live/play
 
@@ -156,7 +181,8 @@ type 直播流编码格式
       }
   }
   ```
-content 弹幕内容
+
+  content 弹幕内容
 
 type 0:右侧飞行弹幕 1:顶部弹幕 2:底部弹幕
 
@@ -174,7 +200,8 @@ color 弹幕十进制颜色
       }
   }
   ```
-hot 热度值
+
+  hot 热度值
 
 - 心跳检测(`check`)
 
@@ -247,10 +274,7 @@ hot 热度值
 请求示例：`/api/v1/fav/list/add`
 
 ```json
-{
-    "title": "测试收藏夹",
-    "order": 30
-}
+{    "title": "测试收藏夹",    "order": 30}
 ```
 
 **Response:**
@@ -586,3 +610,134 @@ hot 热度值
 }
 ```
 
+## 资源监控类
+
+### GetOSInfo 获取系统信息
+
+> GET /api/v1/os/info
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "uptime": 75898,
+    "os": "windows",
+    "platform": "Microsoft Windows 10 Home China",
+    "platform_version": "10.0.19042 Build 19042",
+    "kernel_version": "10.0.19042 Build 19042",
+    "kernel_arch": "x86_64"
+  }
+}
+```
+
+### GetSysMem 获取系统内存占用
+
+> GET /api/v1/os/mem/sys
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "total": 16487870464,
+    "total_str": "15.36 GB",
+    "avl": 3288862720,
+    "avl_str": "3.06 GB"
+  }
+}
+```
+
+### GetSelfMem 获取自身内存占用
+
+> GET /api/v1/os/mem/self
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "mem": 22511616,
+    "mem_str": "21.47 MB"
+  }
+}
+```
+
+### GetSysCPU 获取系统CPU占用
+
+> GET /api/v1/os/cpu/sys
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "percent": 5.88235294117647
+  }
+}
+```
+
+### GetSelfCPU 获取自身CPU占用
+
+> GET /api/v1/os/cpu/self
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "percent": 0.040586327084460326
+  }
+}
+```
+
+### GetOSAll 获取全部信息
+
+> GET /api/v1/os/all
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "info": {
+      "uptime": 76138,
+      "os": "windows",
+      "platform": "Microsoft Windows 10 Home China",
+      "platform_version": "10.0.19042 Build 19042",
+      "kernel_version": "10.0.19042 Build 19042",
+      "kernel_arch": "x86_64"
+    },
+    "self_cpu": {
+      "percent": 0.038924943854536424
+    },
+    "self_mem": {
+      "mem": 22695936,
+      "mem_str": "21.64 MB"
+    },
+    "sys_cpu": {
+      "percent": 3.125
+    },
+    "sys_mem": {
+      "total": 16487870464,
+      "total_str": "15.36 GB",
+      "avl": 3263381504,
+      "avl_str": "3.04 GB"
+    }
+  }
+}
+```
+
+## 

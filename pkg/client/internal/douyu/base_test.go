@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/dop251/goja"
 	"github.com/guonaihong/gout"
-	"github.com/iyear/pure-live/conf"
+	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/request"
 	"log"
 	"net/http"

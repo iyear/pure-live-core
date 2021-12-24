@@ -5,9 +5,6 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags: -s -w
-    hooks:
-      post:
-        - upx --best "{{ .Path }}"
     goos:
       - linux
       - windows
@@ -46,7 +43,8 @@ archives:
         format: zip
     files:
       - README.md
-      - config.yaml.example
+      - config/server.yaml.example
+      - config/account.yaml.example
       - LICENSE
       - static
 snapshot:
