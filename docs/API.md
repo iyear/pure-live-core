@@ -12,6 +12,14 @@
 |   huya   |   虎牙   |
 |  douyu   |   斗鱼   |
 
+## 直播间号
+
+|  平台  |  直播号 |
+| :------: | :------: |
+| bilibili | https://live.bilibili.com/6 (`6`为直播间号) |
+|   huya   | https://www.huya.com/25975826 (`25975826`为直播间号) https://www.huya.com/kaerlol (`kaerlol`为直播间号)   |
+|  douyu   | https://www.douyu.com/312212 (`312212`为直播间号)   |
+
 ## 参数说明
 
 所有参数后端没有默认值，即前端均需传入一个确定的值
