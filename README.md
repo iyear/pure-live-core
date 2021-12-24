@@ -39,7 +39,7 @@
 
 ### 后端
 
-下载 [Release](https://baidu.com) 的最新打包文件
+下载 [Release](https://github.com/iyear/pure-live-core/releases) 的最新打包文件
 
 解压后重命名 `config` 目录下的 `server.yaml.example` 为 `server.yaml` , `config/account.yaml.example` 为 `account.yaml` ,填写相关信息。
 
@@ -148,7 +148,7 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 
 如何添加新的平台支持? [Client文档](./docs/Client.md)
 
-移动平台 `gomobile` 支持? [TODO]()
+移动平台 `gomobile` 支持? [TODO](./docs)
 
 ## 📷 预览
 
