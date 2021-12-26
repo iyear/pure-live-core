@@ -189,6 +189,10 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [ ] 弹幕JSON保存
 - [ ] 弹幕ASS保存
 
+## 📈 趋势
+
+![stars](https://starchart.cc/iyear/pure-live-core.svg)
+
 ## 🗒️ 参考
 
 https://github.com/wbt5/real-url
