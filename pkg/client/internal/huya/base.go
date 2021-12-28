@@ -13,6 +13,7 @@ import (
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/ws_cmd"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/util"
+	"net/url"
 	"strings"
 )
 
@@ -44,10 +45,20 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}
 	link := strings.ReplaceAll(string(b64), "hls", "flv")
 	link = strings.ReplaceAll(link, "m3u8", "flv")
+
+	u, err := url.Parse(fmt.Sprintf("https:%s", link))
+	if err != nil {
+		return nil, err
+	}
+	query := u.Query()
+	// 设置最高清晰度
+	query.Set("ratio", "0")
+	u.RawQuery = query.Encode()
+
 	return &model.PlayURL{
 		Qn:     qn,
 		Desc:   util.Qn2Desc(qn),
-		Origin: fmt.Sprintf("https:%s", link),
+		Origin: u.String(),
 		CORS:   false,
 		Type:   conf.StreamFlv,
 	}, err
