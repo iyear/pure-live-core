@@ -1,4 +1,4 @@
-package srv_live
+package svc_live
 
 import (
 	"context"

@@ -1,4 +1,4 @@
-package srv_fav
+package svc_fav
 
 import (
 	"github.com/iyear/pure-live/global"

@@ -1,4 +1,4 @@
-package srv_os
+package svc_os
 
 import (
 	"github.com/iyear/pure-live/model"

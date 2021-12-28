@@ -1,4 +1,4 @@
-package srv_fav
+package svc_fav
 
 import (
 	"fmt"

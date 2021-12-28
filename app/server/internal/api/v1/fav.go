@@ -5,7 +5,7 @@ import (
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
-	"github.com/iyear/pure-live/service/srv_fav"
+	"github.com/iyear/pure-live/service/svc_fav"
 	"go.uber.org/zap"
 )
 
@@ -18,7 +18,7 @@ func AddFavList(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
-	result, err := srv_fav.AddFavList(req.Title, req.Order)
+	result, err := svc_fav.AddFavList(req.Title, req.Order)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorAddFavList, err, nil)
 		zap.S().Warnw("failed to add fav list", "error", err, "req", req)
@@ -27,7 +27,7 @@ func AddFavList(c *gin.Context) {
 	format.HTTP(c, ecode.Success, nil, result)
 }
 func GetAllFavLists(c *gin.Context) {
-	result, err := srv_fav.GetAllFavLists()
+	result, err := svc_fav.GetAllFavLists()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetAllFavList, err, nil)
 		zap.S().Warnw("failed to get all fav lists", "error", err)
@@ -43,7 +43,7 @@ func DelFavList(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
-	if err := srv_fav.DelFavList(req.ID); err != nil {
+	if err := svc_fav.DelFavList(req.ID); err != nil {
 		format.HTTP(c, ecode.ErrorDelFavList, err, nil)
 		zap.S().Warnw("failed to del fav list", "error", err, "req", req)
 		return
@@ -61,7 +61,7 @@ func EditFavList(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
-	r, err := srv_fav.EditFavList(req.ID, req.Title, req.Order)
+	r, err := svc_fav.EditFavList(req.ID, req.Title, req.Order)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorEditFavList, err, nil)
 		zap.S().Warnw("failed to edit fav list", "error", err, "req", req)
@@ -78,7 +78,7 @@ func GetFavList(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
-	list, favs, err := srv_fav.GetFavList(req.ID)
+	list, favs, err := svc_fav.GetFavList(req.ID)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetFavList, err, nil)
 		zap.S().Warnw("failed to get fav list", "error", err, "req", req)
@@ -98,7 +98,7 @@ func GetFav(c *gin.Context) {
 		return
 	}
 
-	r, err := srv_fav.GetFav(req.ID)
+	r, err := svc_fav.GetFav(req.ID)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetFav, err, nil)
 		zap.S().Warnw("failed to get fav", "error", err)
@@ -118,7 +118,7 @@ func AddFav(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
-	result, err := srv_fav.AddFav(req.FID, req.Order, req.Plat, req.Room, req.Upper)
+	result, err := svc_fav.AddFav(req.FID, req.Order, req.Plat, req.Room, req.Upper)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorAddFav, err, nil)
 		zap.S().Warnw("failed to add fav", "error", err, "req", req)
@@ -136,7 +136,7 @@ func DelFav(c *gin.Context) {
 		return
 	}
 
-	if err := srv_fav.DelFav(req.ID); err != nil {
+	if err := svc_fav.DelFav(req.ID); err != nil {
 		format.HTTP(c, ecode.ErrorDelFav, err, nil)
 		zap.S().Warnw("failed to del fav", "error", err)
 		return
@@ -156,7 +156,7 @@ func EditFav(c *gin.Context) {
 		return
 	}
 
-	r, err := srv_fav.EditFav(req.ID, req.Order, req.Plat, req.Room, req.Upper)
+	r, err := svc_fav.EditFav(req.ID, req.Order, req.Plat, req.Room, req.Upper)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorEditFav, err, nil)
 		zap.S().Warnw("failed to edit fav", "error", err)
