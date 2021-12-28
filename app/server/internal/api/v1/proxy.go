@@ -8,7 +8,7 @@ import (
 )
 
 func Proxy(c *gin.Context) {
-	req, err := http.NewRequestWithContext(c, c.Request.Method, c.GetHeader("URL"), c.Request.Body)
+	req, err := http.NewRequestWithContext(c, c.Request.Method, c.GetHeader("PL-URL"), c.Request.Body)
 
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -19,7 +19,7 @@ func Proxy(c *gin.Context) {
 	}(req.Body)
 	req.Header = c.Request.Header
 
-	req.Header.Del("URL")
+	req.Header.Del("PL-URL")
 	resp, err := request.HTTP().Client().Do(req)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
