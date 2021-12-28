@@ -43,6 +43,27 @@
 }
 ```
 
+## HTTP请求转发
+
+直播推荐和分区等功能应当在前端中实现，为了避免跨域限制， `core` 提供了 `http` 请求转发功能，用于请求除 `core` `localhost` `局域网` 外的其他接口。
+
+即使客户端不会有跨域限制，依旧推荐使用该方法请求网页，因为这样可以统一管理所有HTTP请求的具体参数和代理。
+
+> Any /api/v1/proxy
+
+你需要在 `Header` 的 `PL-URL` 属性设置你需要访问的实际 `url` ，注意: 需要显式设置 `scheme` `host` `query`.
+
+`Request Method` `Body` 与 其他 `Header` 都是你实际需要请求的参数。
+
+例如:
+
+```shell
+curl --request POST -sL \
+     --url 'http://localhost:8081/api/v1/proxy'\
+     --header 'PL-URL: https://api.uomg.com/api/long2dwz'\
+     --header 'Content-Type: application/x-www-form-urlencoded'\
+     --data 'dwzapi=urlcn&url=https://www.baidu.com'
+```
 
 ## 直播信息类
 
@@ -222,8 +243,6 @@ color 弹幕十进制颜色
       "type": "check"
   }
   ```
-
-
 
 ## 直播操作类
 
@@ -747,5 +766,3 @@ color 弹幕十进制颜色
   }
 }
 ```
-
-## 
