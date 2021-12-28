@@ -49,6 +49,8 @@ func Init() *gin.Engine {
 		apiV1.GET("/os/mem/self", v1.GetSelfMem)
 		apiV1.GET("/os/cpu/sys", v1.GetSysCPU)
 		apiV1.GET("/os/cpu/self", v1.GetSelfCPU)
+
+		apiV1.Any("/proxy", v1.Proxy)
 	}
 
 	return r
