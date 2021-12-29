@@ -1,6 +1,6 @@
 bilibili:
   # 是否启用bilibili账号
-  enable: true
+  enable: false
   # 以下为b站的Cookies
   DedeUserID: xxx
   DedeUserIDCkMd5: xxx
