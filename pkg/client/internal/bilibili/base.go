@@ -3,12 +3,15 @@ package bilibili
 import (
 	"github.com/iyear/biligo"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/util"
 	"strconv"
 )
 
-type base struct{}
+type base struct {
+	*abstract.Client
+}
 
 func NewBiliBili() (model.Client, error) {
 	if !conf.Account.BiliBili.Enable {

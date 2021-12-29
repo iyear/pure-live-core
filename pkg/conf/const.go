@@ -1,6 +1,7 @@
 package conf
 
 const (
+	PlatAbstract = "abstract"
 	PlatBiliBili = "bilibili"
 	PlatHuya     = "huya"
 	PlatDouyu    = "douyu"

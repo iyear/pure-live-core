@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"github.com/guonaihong/gout"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/util"
 	"github.com/tidwall/gjson"
 	"strings"
 )
 
-type EGame struct{}
+type EGame struct {
+	*abstract.Client
+}
 
 func NewEGame() (model.Client, error) {
 	return &EGame{}, nil
