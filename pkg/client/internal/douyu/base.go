@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/guonaihong/gout"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/request"
 	"github.com/iyear/pure-live/pkg/util"
@@ -17,7 +18,9 @@ import (
 	"time"
 )
 
-type Douyu struct{}
+type Douyu struct {
+	*abstract.Client
+}
 
 func NewDouyu() (model.Client, error) {
 	return &Douyu{}, nil
