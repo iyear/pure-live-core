@@ -47,4 +47,4 @@ jobs:
           push: true
           tags: |
             iyear/pure-live:latest
-            iyear/pure-live:${{ github.ref }}
+            iyear/pure-live:${GITHUB_REF#refs/*/}
