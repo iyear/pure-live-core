@@ -30,7 +30,7 @@ jobs:
           yarn run build
           cp -r dist ../static
           cd ..
-          echo "tree"
+          tree
       - name: Get current date
         id: date
         run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
