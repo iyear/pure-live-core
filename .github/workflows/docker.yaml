@@ -23,7 +23,6 @@ jobs:
           path: frontend
       - name: Install and Build Frontend
         run: |
-          mkdir static
           cd frontend
           yarn
           yarn run build
