@@ -6,6 +6,11 @@
 ![](https://img.shields.io/badge/license-GPL-lightgrey.svg?style=flat-square)
 ![](https://img.shields.io/github/v/release/iyear/pure-live-core?color=red&style=flat-square)
 ![](https://img.shields.io/github/last-commit/iyear/pure-live-core?style=flat-square)
+![](https://img.shields.io/github/downloads/iyear/pure-live-core/total?style=flat-square)
+ 
+![](https://img.shields.io/github/workflow/status/iyear/pure-live-core/Docker%20Build?label=docker%20build&style=flat-square)
+![](https://img.shields.io/docker/v/iyear/pure-live?label=docker%20tag&style=flat-square)
+![](https://img.shields.io/docker/image-size/iyear/pure-live?style=flat-square?label=docker%20image%20size)
 
 **该项目仅供学习，请勿用于商业用途。任何使用该项目造成的后果由使用者自行承担。**
 
