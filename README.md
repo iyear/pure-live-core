@@ -48,9 +48,9 @@
 
 ```shell
 #启动
-docker run --name pure-live -p <HOST_PORT>:8800 -d iyear/pure-live:latest
+docker run --name pure-live -p <HOST_PORT>:8800 -d --restart=always iyear/pure-live:latest
 #或添加-v参数
-docker run --name pure-live -p <HOST_PORT>:8800 -v /HOST/PATH/DATA:/data -v /HOST/PATH/LOG:/log -d iyear/pure-live:latest
+docker run --name pure-live -p <HOST_PORT>:8800 -v /HOST/PATH/DATA:/data -v /HOST/PATH/LOG:/log -d --restart=always iyear/pure-live:latest
 
 #查看log
 docker logs -f pure-live
