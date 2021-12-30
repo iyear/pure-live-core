@@ -42,7 +42,38 @@
 
 ## 🛠️ 部署
 
-### 后端
+### Docker
+
+支持 `amd64` `386` `arm64` `arm/v6` `arm/v7` 架构
+
+```shell
+#启动
+docker run --name pure-live -p <HOST_PORT>:8800 -d iyear/pure-live:latest
+#或添加-v参数
+docker run --name pure-live -p <HOST_PORT>:8800 -v /HOST/PATH/DATA:/data -v /HOST/PATH/LOG:/log -d iyear/pure-live:latest
+
+#查看log
+docker logs -f pure-live
+
+#设置账户配置文件
+docker cp PATH/TO/account.yaml pure-live:/config/account.yaml
+docker restart pure-live
+
+#设置服务器配置文件
+docker cp PATH/TO/server.yaml pure-live:/config/server.yaml
+docker restart pure-live
+
+#备份数据库
+docker cp pure-live:/data/data.db .
+
+#备份配置文件
+docker cp pure-live:/config .
+
+#复制log到宿主机
+docker cp pure-live:/log .
+```
+
+### 二进制部署
 
 下载 [Release](https://github.com/iyear/pure-live-core/releases) 的最新打包文件
 
@@ -71,7 +102,8 @@ chmod +x ./pure-live
 
 - ......
 
-## ⚙️ 命令行
+## ⚙️ 命令行(仅支持二进制文件)
+
 查看版本:
 ```shell
 ./pure-lie -v
