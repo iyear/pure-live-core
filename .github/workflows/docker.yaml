@@ -2,7 +2,7 @@ name: Docker Build
 on:
   push:
     tags:
-      - 'v*'
+      - v*
   workflow_dispatch:
 jobs:
   buildx:
@@ -11,7 +11,7 @@ jobs:
       - name: Get core
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: master
       - uses: actions/setup-node@v1
         with:
           node-version: 14
@@ -27,9 +27,6 @@ jobs:
           yarn
           yarn run build
           cp -r dist ../static
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -50,4 +47,4 @@ jobs:
           push: true
           tags: |
             iyear/pure-live:latest
-            iyear/pure-live:${{ steps.date.outputs.today }}
+            iyear/pure-live:${{ github.ref }}
