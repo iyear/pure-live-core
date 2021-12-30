@@ -56,3 +56,6 @@ jobs:
           tags: |
             iyear/pure-live:latest
             iyear/pure-live:${{ steps.date.outputs.today }}
+        run: |
+          pwd
+          tree
