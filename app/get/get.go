@@ -11,7 +11,7 @@ import (
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/forwarder"
 	"github.com/iyear/pure-live/pkg/util"
-	"github.com/iyear/pure-live/service/srv_live"
+	"github.com/iyear/pure-live/service/svc_live"
 	"github.com/q191201771/lal/pkg/httpflv"
 	"github.com/q191201771/naza/pkg/nazalog"
 	"github.com/xuri/excelize/v2"
@@ -22,7 +22,7 @@ import (
 )
 
 func Get(plat, room, stream, danmaku string, roll bool) {
-	info, err := srv_live.GetRoomInfo(plat, room)
+	info, err := svc_live.GetRoomInfo(plat, room)
 	if err != nil {
 		color.Red("[ERROR] can't get room info: %s\n", err)
 		return
@@ -36,7 +36,7 @@ func Get(plat, room, stream, danmaku string, roll bool) {
 
 	room = info.Room
 
-	url, err := srv_live.GetPlayURL(plat, info.Room)
+	url, err := svc_live.GetPlayURL(plat, info.Room)
 	if err != nil {
 		color.Red("[ERROR] can't get room info: %s\n", err)
 		return
@@ -135,7 +135,7 @@ func dlDanmaku(ctx context.Context, plat, room, path string, roll bool) error {
 	}
 	defer cli.Stop()
 
-	rev, err := srv_live.Serve(ctx, websocket.DefaultDialer, uuid.New().String(), cli, room)
+	rev, err := svc_live.Serve(ctx, websocket.DefaultDialer, uuid.New().String(), cli, room)
 	if err != nil {
 		return err
 	}

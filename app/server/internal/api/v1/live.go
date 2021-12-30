@@ -6,7 +6,7 @@ import (
 	"github.com/iyear/pure-live/global"
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
-	"github.com/iyear/pure-live/service/srv_live"
+	"github.com/iyear/pure-live/service/svc_live"
 	"go.uber.org/zap"
 )
 
@@ -19,7 +19,7 @@ func GetPlayURL(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, nil, nil)
 		return
 	}
-	url, err := srv_live.GetPlayURL(req.Plat, req.Room)
+	url, err := svc_live.GetPlayURL(req.Plat, req.Room)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetPlayURL, err, nil)
 		zap.S().Warnw("failed to get play url", "error", err, "req", req)
@@ -36,7 +36,7 @@ func GetRoomInfo(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, nil, nil)
 		return
 	}
-	info, err := srv_live.GetRoomInfo(req.Plat, req.Room)
+	info, err := svc_live.GetRoomInfo(req.Plat, req.Room)
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetRoomInfo, err, nil)
 		zap.S().Warnw("failed to get room info", "error", err, "req", req)
@@ -62,7 +62,7 @@ func SendDanmaku(c *gin.Context) {
 		return
 	}
 
-	if err = srv_live.SendDanmaku(conn.Client, conn.Room, req.Content, req.Type, req.Color); err != nil {
+	if err = svc_live.SendDanmaku(conn.Client, conn.Room, req.Content, req.Type, req.Color); err != nil {
 		zap.S().Warnw("failed to send danmaku", "error", err, "req", req)
 		format.HTTP(c, ecode.ErrorSendDanmaku, err, nil)
 		return

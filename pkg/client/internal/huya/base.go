@@ -7,18 +7,22 @@ import (
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/danmaku"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/push_msg"
 	"github.com/iyear/pure-live/pkg/client/internal/huya/internal/tars/ws_cmd"
 	"github.com/iyear/pure-live/pkg/conf"
 	"github.com/iyear/pure-live/pkg/util"
+	"net/url"
 	"strings"
 )
 
 const hb = "00031d0000690000006910032c3c4c56086f6e6c696e657569660f4f6e557365724865617274426561747d00003c0800010604745265711d00002f0a0a0c1600260036076164725f77617046000b1203aef00f2203aef00f3c426d5202605c60017c82000bb01f9cac0b8c980ca80c20"
 
-type Huya struct{}
+type Huya struct {
+	*abstract.Client
+}
 type H map[string]interface{}
 
 func NewHuya() (model.Client, error) {
@@ -44,10 +48,20 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}
 	link := strings.ReplaceAll(string(b64), "hls", "flv")
 	link = strings.ReplaceAll(link, "m3u8", "flv")
+
+	u, err := url.Parse(fmt.Sprintf("https:%s", link))
+	if err != nil {
+		return nil, err
+	}
+	query := u.Query()
+	// 设置最高清晰度
+	query.Set("ratio", "0")
+	u.RawQuery = query.Encode()
+
 	return &model.PlayURL{
 		Qn:     qn,
 		Desc:   util.Qn2Desc(qn),
-		Origin: fmt.Sprintf("https:%s", link),
+		Origin: u.String(),
 		CORS:   false,
 		Type:   conf.StreamFlv,
 	}, err

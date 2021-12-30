@@ -6,6 +6,11 @@
 ![](https://img.shields.io/badge/license-GPL-lightgrey.svg?style=flat-square)
 ![](https://img.shields.io/github/v/release/iyear/pure-live-core?color=red&style=flat-square)
 ![](https://img.shields.io/github/last-commit/iyear/pure-live-core?style=flat-square)
+![](https://img.shields.io/github/downloads/iyear/pure-live-core/total?style=flat-square)
+ 
+![](https://img.shields.io/github/workflow/status/iyear/pure-live-core/Docker%20Build?label=docker%20build&style=flat-square)
+![](https://img.shields.io/docker/v/iyear/pure-live?label=docker%20tag&style=flat-square)
+![](https://img.shields.io/docker/image-size/iyear/pure-live?style=flat-square?label=docker%20image%20size)
 
 **该项目仅供学习，请勿用于商业用途。任何使用该项目造成的后果由使用者自行承担。**
 
@@ -142,6 +147,12 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 ./pure-live export -d mydata/data.db -p mydata.xlsx
 ```
 
+## 🌲 生态
+
+目前 `pure-live` 的生态并不完善，最终的目标是做到开源社区驱动的维护模式。
+
+在发展到一定规模后， `pure-live` 将会以 `organization` 的形式维护 `core` 与不同平台的客户端。
+
 ## 📝 文档
 
 如何写一个自己的前端? [API文档](./docs/API.md)
@@ -188,6 +199,16 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 
 - [ ] 弹幕JSON保存
 - [ ] 弹幕ASS保存
+
+## 📈 趋势
+
+![stars](https://starchart.cc/iyear/pure-live-core.svg)
+
+## 🧑 贡献者
+
+<a href="https://github.com/iyear/pure-live-core/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=iyear/pure-live-core"  alt="contrib"/>
+</a>
 
 ## 🗒️ 参考
 

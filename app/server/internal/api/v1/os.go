@@ -5,11 +5,11 @@ import (
 	"github.com/iyear/pure-live/model"
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
-	"github.com/iyear/pure-live/service/srv_os"
+	"github.com/iyear/pure-live/service/svc_os"
 )
 
 func GetOSInfo(c *gin.Context) {
-	info, err := srv_os.GetOSInfo()
+	info, err := svc_os.GetOSInfo()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetOSInfo, err, nil)
 		return
@@ -18,7 +18,7 @@ func GetOSInfo(c *gin.Context) {
 }
 
 func GetSysMem(c *gin.Context) {
-	r, err := srv_os.GetSysMem()
+	r, err := svc_os.GetSysMem()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetSysMem, err, nil)
 		return
@@ -27,7 +27,7 @@ func GetSysMem(c *gin.Context) {
 }
 
 func GetSelfMem(c *gin.Context) {
-	r, err := srv_os.GetSelfMem()
+	r, err := svc_os.GetSelfMem()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetSelfMem, err, nil)
 		return
@@ -36,7 +36,7 @@ func GetSelfMem(c *gin.Context) {
 }
 
 func GetSysCPU(c *gin.Context) {
-	r, err := srv_os.GetSysCPU()
+	r, err := svc_os.GetSysCPU()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetSysCPU, err, nil)
 		return
@@ -45,7 +45,7 @@ func GetSysCPU(c *gin.Context) {
 }
 
 func GetSelfCPU(c *gin.Context) {
-	r, err := srv_os.GetSelfCPU()
+	r, err := svc_os.GetSelfCPU()
 	if err != nil {
 		format.HTTP(c, ecode.ErrorGetSelfCPU, err, nil)
 		return
@@ -62,19 +62,19 @@ func GetOSAll(c *gin.Context) {
 
 	err := func() error {
 		var err error
-		if info, err = srv_os.GetOSInfo(); err != nil {
+		if info, err = svc_os.GetOSInfo(); err != nil {
 			return err
 		}
-		if sysCPU, err = srv_os.GetSysCPU(); err != nil {
+		if sysCPU, err = svc_os.GetSysCPU(); err != nil {
 			return err
 		}
-		if selfCPU, err = srv_os.GetSelfCPU(); err != nil {
+		if selfCPU, err = svc_os.GetSelfCPU(); err != nil {
 			return err
 		}
-		if sysMem, err = srv_os.GetSysMem(); err != nil {
+		if sysMem, err = svc_os.GetSysMem(); err != nil {
 			return err
 		}
-		if selfMem, err = srv_os.GetSelfMem(); err != nil {
+		if selfMem, err = svc_os.GetSelfMem(); err != nil {
 			return err
 		}
 		return nil

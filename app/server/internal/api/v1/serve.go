@@ -12,7 +12,7 @@ import (
 	"github.com/iyear/pure-live/pkg/ecode"
 	"github.com/iyear/pure-live/pkg/format"
 	"github.com/iyear/pure-live/pkg/util"
-	"github.com/iyear/pure-live/service/srv_live"
+	"github.com/iyear/pure-live/service/svc_live"
 	"go.uber.org/zap"
 	"net/http"
 	"time"
@@ -65,7 +65,7 @@ func Serve(c *gin.Context) {
 		dialer.NetDial = util.MustGetSocks5(config.Server.Socks5.Host, config.Server.Socks5.Port, config.Server.Socks5.User, config.Server.Socks5.Password).Dial
 	}
 
-	rev, err := srv_live.Serve(ctx, dialer, id, cli, req.Room)
+	rev, err := svc_live.Serve(ctx, dialer, id, cli, req.Room)
 	if err != nil {
 		zap.S().Warnw("failed to start serve", "id", id, "error", err)
 		return
