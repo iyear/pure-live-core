@@ -199,6 +199,12 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 
 ![stars](https://starchart.cc/iyear/pure-live-core.svg)
 
+## 🧑 贡献者
+
+<a href="https://github.com/iyear/pure-live-core/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=iyear/pure-live-core"  alt="contrib"/>
+</a>
+
 ## 🗒️ 参考
 
 https://github.com/wbt5/real-url
