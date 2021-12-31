@@ -10,7 +10,7 @@
  
 ![](https://img.shields.io/github/workflow/status/iyear/pure-live-core/Docker%20Build?label=docker%20build&style=flat-square)
 ![](https://img.shields.io/docker/v/iyear/pure-live?label=docker%20tag&style=flat-square)
-![](https://img.shields.io/docker/image-size/iyear/pure-live?style=flat-square?label=docker%20image%20size)
+![](https://img.shields.io/docker/image-size/iyear/pure-live?style=flat-square&label=docker%20image%20size)
 
 **该项目仅供学习，请勿用于商业用途。任何使用该项目造成的后果由使用者自行承担。**
 
