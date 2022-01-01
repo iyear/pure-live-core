@@ -3,7 +3,7 @@ package format
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/pkg/ecode"
+	"github.com/iyear/pure-live-core/pkg/ecode"
 	"net/http"
 )
 

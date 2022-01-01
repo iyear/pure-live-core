@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/pkg/request"
+	"github.com/iyear/pure-live-core/pkg/request"
 	"io"
 	"net/http"
 )

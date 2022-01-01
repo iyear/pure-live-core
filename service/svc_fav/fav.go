@@ -1,8 +1,8 @@
 package svc_fav
 
 import (
-	"github.com/iyear/pure-live/global"
-	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live-core/global"
+	"github.com/iyear/pure-live-core/model"
 )
 
 func GetFav(id uint64) (*model.Favorite, error) {

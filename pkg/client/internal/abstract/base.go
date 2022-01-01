@@ -2,8 +2,8 @@ package abstract
 
 import (
 	"errors"
-	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/conf"
 )
 
 type Client struct{}

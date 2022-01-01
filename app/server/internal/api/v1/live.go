@@ -3,10 +3,10 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/global"
-	"github.com/iyear/pure-live/pkg/ecode"
-	"github.com/iyear/pure-live/pkg/format"
-	"github.com/iyear/pure-live/service/svc_live"
+	"github.com/iyear/pure-live-core/global"
+	"github.com/iyear/pure-live-core/pkg/ecode"
+	"github.com/iyear/pure-live-core/pkg/format"
+	"github.com/iyear/pure-live-core/service/svc_live"
 	"go.uber.org/zap"
 )
 

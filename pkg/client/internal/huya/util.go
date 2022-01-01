@@ -3,7 +3,7 @@ package huya
 import (
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
-	"github.com/iyear/pure-live/pkg/request"
+	"github.com/iyear/pure-live-core/pkg/request"
 	"github.com/tidwall/gjson"
 	"regexp"
 )

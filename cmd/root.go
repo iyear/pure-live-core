@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/fatih/color"
-	"github.com/iyear/pure-live/global"
+	"github.com/iyear/pure-live-core/global"
 	"github.com/spf13/cobra"
 )
 

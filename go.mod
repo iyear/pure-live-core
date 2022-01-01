@@ -1,4 +1,4 @@
-module github.com/iyear/pure-live
+module github.com/iyear/pure-live-core
 
 go 1.16
 

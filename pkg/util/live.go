@@ -1,6 +1,6 @@
 package util
 
-import "github.com/iyear/pure-live/pkg/conf"
+import "github.com/iyear/pure-live-core/pkg/conf"
 
 var qn2desc = map[int]string{
 	conf.QnBest: "原画",

@@ -1,6 +1,6 @@
 package model
 
-import "github.com/iyear/pure-live/pkg/conf"
+import "github.com/iyear/pure-live-core/pkg/conf"
 
 type Msg interface {
 	Event() string

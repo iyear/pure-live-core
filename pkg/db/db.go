@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live-core/model"
 	"github.com/iyear/sqlite"
 	"gorm.io/gorm"
 	"time"
