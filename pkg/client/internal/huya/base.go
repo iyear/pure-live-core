@@ -25,14 +25,17 @@ type Huya struct {
 }
 type H map[string]interface{}
 
+// NewHuya
 func NewHuya() (model.Client, error) {
 	return &Huya{}, nil
 }
 
+// Plat
 func (h *Huya) Plat() string {
 	return conf.PlatHuya
 }
 
+// GetPlayURL
 func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	liveLine := ""
 	json, err := getRoomInfo(room)
@@ -67,6 +70,7 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, err
 }
 
+// GetRoomInfo
 func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	j, err := getRoomInfo(room)
 	if err != nil {
@@ -81,10 +85,12 @@ func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
+// Host
 func (h *Huya) Host() string {
 	return "wss://cdnws.api.huya.com/"
 }
 
+// Enter
 func (h *Huya) Enter(room string) (int, [][]byte, error) {
 	j, err := getRoomInfo(room)
 	if err != nil {
@@ -97,11 +103,13 @@ func (h *Huya) Enter(room string) (int, [][]byte, error) {
 	return websocket.BinaryMessage, [][]byte{getEnterMsg(lYyid, lChannelId, lSubChannelId)}, nil
 }
 
+// HeartBeat
 func (h *Huya) HeartBeat() (int, []byte, error) {
 	msg, err := hex.DecodeString(hb)
 	return websocket.BinaryMessage, msg, err
 }
 
+// Handle
 func (h *Huya) Handle(tp int, msg []byte) ([]model.Msg, bool, error) {
 	if tp != websocket.BinaryMessage {
 		return nil, false, nil
@@ -111,7 +119,7 @@ func (h *Huya) Handle(tp int, msg []byte) ([]model.Msg, bool, error) {
 		return nil, false, err
 	}
 	switch cmd.ICmdType {
-	case EwsCmdS2CMsgPushReq:
+	case ewsCmdS2CMsgPushReq:
 		return h.handleMsgPushReq(codec.FromInt8(cmd.VData))
 	}
 	return nil, false, nil
@@ -148,6 +156,8 @@ func (h *Huya) handleMsgPushReq(b []byte) ([]model.Msg, bool, error) {
 	}
 	return nil, false, nil
 }
+
+// SendDanmaku
 func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) error {
 	_ = room
 	_ = content
@@ -156,6 +166,7 @@ func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) err
 	return fmt.Errorf("todo")
 }
 
+// Stop
 func (h *Huya) Stop() {
 
 }

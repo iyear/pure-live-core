@@ -8,6 +8,7 @@ var (
 	Account account
 )
 
+// InitAccount init account config
 func InitAccount(path string) error {
 	c := viper.New()
 	c.SetConfigFile(path)

@@ -1,5 +1,6 @@
 package model
 
+// FavoritesList fav list
 type FavoritesList struct {
 	ID    uint64 `gorm:"primaryKey;column:id;index" json:"id"`
 	Title string `gorm:"not null;unique;column:title" json:"title"`
@@ -7,6 +8,7 @@ type FavoritesList struct {
 	TimeHook
 }
 
+// Favorite fav for live room
 type Favorite struct {
 	ID    uint64 `gorm:"primaryKey;column:id;index" json:"id"` // ID
 	FID   uint64 `gorm:"not null;column:fid;index" json:"fid"` // 收藏夹ID

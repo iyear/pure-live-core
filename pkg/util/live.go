@@ -9,6 +9,7 @@ var qn2desc = map[int]string{
 	conf.QnLow:  "流畅",
 }
 
+// Qn2Desc returns the description of quality.
 func Qn2Desc(qn int) string {
 	return qn2desc[qn]
 }
@@ -19,6 +20,7 @@ var mode2desc = map[int]string{
 	conf.DanmakuTypeBottom: "底部",
 }
 
+// DmMode2Desc returns the description of danmaku mode.
 func DmMode2Desc(mode int) string {
 	return mode2desc[mode]
 }

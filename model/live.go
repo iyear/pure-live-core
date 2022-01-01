@@ -2,6 +2,7 @@ package model
 
 import "fmt"
 
+// PlayURL live stream info
 type PlayURL struct {
 	Qn     int    `json:"qn"`
 	Desc   string `json:"desc"`
@@ -10,6 +11,7 @@ type PlayURL struct {
 	Type   string `json:"type"`
 }
 
+// RoomInfo live room info
 type RoomInfo struct {
 	Status int    `json:"status"` // 0:未开播 1:已开播
 	Room   string `json:"room"`   // 真实房间号

@@ -25,6 +25,8 @@ type Douyu struct {
 func NewDouyu() (model.Client, error) {
 	return &Douyu{}, nil
 }
+
+// Plat
 func (d *Douyu) Plat() string {
 	return conf.PlatDouyu
 }
@@ -147,6 +149,7 @@ func (d *Douyu) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, nil
 }
 
+// GetRoomInfo
 func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	html := ""
 	if err := request.HTTP().GET(fmt.Sprintf("https://m.douyu.com/%s", room)).BindBody(&html).Do(); err != nil {
@@ -166,6 +169,7 @@ func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
+// Host
 func (d *Douyu) Host() string {
 	return "wss://danmuproxy.douyu.com:8503/"
 }

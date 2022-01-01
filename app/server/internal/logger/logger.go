@@ -25,6 +25,7 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
+// Init init logger
 func Init(level zapcore.LevelEnabler) {
 	writeSyncer := getLogWriter()
 	encoder := getEncoder()

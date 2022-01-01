@@ -10,10 +10,12 @@ import (
 
 var dial = net.Dial
 
+// SetSocks5 set socks5 proxy
 func SetSocks5(host string, port int, user, password string) {
 	dial = util.MustGetSocks5(host, port, user, password).Dial
 }
 
+// HTTP http request
 func HTTP() *dataflow.DataFlow {
 	c := http.DefaultClient
 	tsp := &http.Transport{Dial: dial}

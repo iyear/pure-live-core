@@ -13,6 +13,7 @@ type base struct {
 	*abstract.Client
 }
 
+// NewBiliBili
 func NewBiliBili() (model.Client, error) {
 	if !conf.Account.BiliBili.Enable {
 		return &BiliComm{
@@ -36,10 +37,12 @@ func NewBiliBili() (model.Client, error) {
 	return &BiliBili{client: b}, nil
 }
 
+// Plat
 func (c *base) Plat() string {
 	return conf.PlatBiliBili
 }
 
+// GetPlayURL
 func (c *base) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	client := biligo.NewCommClient(&biligo.CommSetting{})
 	roomNum, err := strconv.ParseInt(room, 10, 64)
@@ -68,6 +71,7 @@ func (c *base) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, nil
 }
 
+// GetRoomInfo
 func (c *base) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	t := biligo.NewCommClient(&biligo.CommSetting{})
 	roomNum, err := strconv.ParseInt(room, 10, 64)
@@ -91,6 +95,7 @@ func (c *base) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
+// Stop
 func (c *base) Stop() {
 
 }
