@@ -5,11 +5,13 @@ import (
 	"os"
 )
 
+// FileExists checks if a file exists
 func FileExists(file string) bool {
 	_, err := os.Stat(file)
 	return err == nil || os.IsExist(err)
 }
 
+// MemoryHuman ize converts bytes to human readable format
 func MemoryHuman(m uint64) string {
 	if m < 1024 {
 		return fmt.Sprintf("%d B", m)

@@ -14,6 +14,7 @@ func IF(f bool, a interface{}, b interface{}) interface{} {
 	return b
 }
 
+// GetBetweenString returns the string between the start and end strings.
 func GetBetweenString(s, start, end string) string {
 	if len(s) == 0 {
 		return ""
@@ -36,6 +37,7 @@ func GetBetweenString(s, start, end string) string {
 	return s[startIndex:endIndex]
 }
 
+// MustGetSocks5 returns a socks5 proxy.
 func MustGetSocks5(host string, port int, user, password string) proxy.Dialer {
 	if host == "" || port == 0 {
 		return &net.Dialer{}

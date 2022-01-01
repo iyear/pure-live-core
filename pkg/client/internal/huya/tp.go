@@ -1,5 +1,5 @@
 package huya
 
 const (
-	EwsCmdS2CMsgPushReq = 7
+	ewsCmdS2CMsgPushReq = 7
 )

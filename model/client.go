@@ -1,5 +1,6 @@
 package model
 
+// Client live platform client interface
 type Client interface {
 	Plat() string
 	// GetPlayURL qn传入 conf.QnBest conf.QnHigh conf.QnMid conf.QnLow
@@ -19,6 +20,7 @@ type Client interface {
 	Stop()
 }
 
+// Transport transport
 type Transport struct {
 	Msg   Msg
 	Error error

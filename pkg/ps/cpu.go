@@ -7,10 +7,12 @@ import (
 	"time"
 )
 
+// GetSysCPU get system cpu info
 func GetSysCPU(internal time.Duration, percpu bool) ([]float64, error) {
 	return cpu.Percent(internal, percpu)
 }
 
+// GetSelfCPU get self cpu info
 func GetSelfCPU() (float64, error) {
 	proc, err := process.NewProcess(int32(os.Getpid()))
 	if err != nil {

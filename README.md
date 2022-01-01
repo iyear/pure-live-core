@@ -7,7 +7,8 @@
 ![](https://img.shields.io/github/v/release/iyear/pure-live-core?color=red&style=flat-square)
 ![](https://img.shields.io/github/last-commit/iyear/pure-live-core?style=flat-square)
 ![](https://img.shields.io/github/downloads/iyear/pure-live-core/total?style=flat-square)
- 
+[![Go Report Card](https://goreportcard.com/badge/github.com/iyear/pure-live-core)](https://goreportcard.com/report/github.com/iyear/pure-live-core)
+
 ![](https://img.shields.io/github/workflow/status/iyear/pure-live-core/Docker%20Build?label=docker%20build&style=flat-square)
 ![](https://img.shields.io/docker/v/iyear/pure-live?label=docker%20tag&style=flat-square)
 ![](https://img.shields.io/docker/image-size/iyear/pure-live?style=flat-square&label=docker%20image%20size)

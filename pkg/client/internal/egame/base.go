@@ -15,10 +15,12 @@ type EGame struct {
 	*abstract.Client
 }
 
+// NewEGame
 func NewEGame() (model.Client, error) {
 	return &EGame{}, nil
 }
 
+// Plat
 func (e *EGame) Plat() string {
 	return conf.PlatEGame
 }
@@ -40,6 +42,8 @@ func getInfo(room string) (*gjson.Result, error) {
 	return &r, nil
 
 }
+
+// GetPlayURL
 func (e *EGame) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	r, err := getInfo(room)
 	if err != nil {
@@ -56,6 +60,7 @@ func (e *EGame) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, nil
 }
 
+// GetRoomInfo
 func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	r, err := getInfo(room)
 	if err != nil {
@@ -72,25 +77,30 @@ func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
+// Host
 func (e *EGame) Host() string {
 	return "wss://barragepush.egame.qq.com/sub"
 }
 
+// Enter
 func (e *EGame) Enter(room string) (tp int, data [][]byte, err error) {
 	_ = room
 	return 0, nil, fmt.Errorf("not supported")
 }
 
+// Handle
 func (e *EGame) Handle(tp int, data []byte) (msg []model.Msg, matched bool, err error) {
 	_ = tp
 	_ = data
 	return nil, false, nil
 }
 
+// HeartBeat
 func (e *EGame) HeartBeat() (tp int, data []byte, err error) {
 	return 0, nil, fmt.Errorf("not supported")
 }
 
+// SendDanmaku
 func (e *EGame) SendDanmaku(room string, content string, tp int, color int64) error {
 	_ = room
 	_ = content
@@ -99,6 +109,7 @@ func (e *EGame) SendDanmaku(room string, content string, tp int, color int64) er
 	return fmt.Errorf("not supported")
 }
 
+// Stop
 func (e *EGame) Stop() {
 
 }
