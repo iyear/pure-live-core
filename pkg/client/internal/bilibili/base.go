@@ -2,10 +2,10 @@ package bilibili
 
 import (
 	"github.com/iyear/biligo"
-	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/client/internal/abstract"
-	"github.com/iyear/pure-live/pkg/conf"
-	"github.com/iyear/pure-live/pkg/util"
+	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/client/internal/abstract"
+	"github.com/iyear/pure-live-core/pkg/conf"
+	"github.com/iyear/pure-live-core/pkg/util"
 	"strconv"
 )
 

@@ -3,7 +3,7 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/pkg/forwarder"
+	"github.com/iyear/pure-live-core/pkg/forwarder"
 	"go.uber.org/zap"
 	"net/http"
 )

@@ -1,8 +1,8 @@
 package svc_os
 
 import (
-	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/ps"
+	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/ps"
 )
 
 func GetOSInfo() (*model.OSInfo, error) {

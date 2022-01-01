@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live-core/model"
 	"strconv"
 )
 

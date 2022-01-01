@@ -5,7 +5,7 @@ import (
 	"compress/zlib"
 	"encoding/binary"
 	"github.com/andybalholm/brotli"
-	"github.com/iyear/pure-live/pkg/conf"
+	"github.com/iyear/pure-live-core/pkg/conf"
 	"io"
 )
 

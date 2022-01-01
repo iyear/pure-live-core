@@ -2,11 +2,11 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/app/server/internal/api"
-	"github.com/iyear/pure-live/app/server/internal/api/v1"
-	"github.com/iyear/pure-live/app/server/internal/config"
-	"github.com/iyear/pure-live/app/server/internal/middleware"
-	"github.com/iyear/pure-live/pkg/util"
+	"github.com/iyear/pure-live-core/app/server/internal/api"
+	"github.com/iyear/pure-live-core/app/server/internal/api/v1"
+	"github.com/iyear/pure-live-core/app/server/internal/config"
+	"github.com/iyear/pure-live-core/app/server/internal/middleware"
+	"github.com/iyear/pure-live-core/pkg/util"
 )
 
 var r *gin.Engine

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/iyear/pure-live/app/server"
+	"github.com/iyear/pure-live-core/app/server"
 	"github.com/spf13/cobra"
 )
 

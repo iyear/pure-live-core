@@ -3,9 +3,9 @@ package export
 import (
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/iyear/pure-live/model"
-	"github.com/iyear/pure-live/pkg/db"
-	"github.com/iyear/pure-live/pkg/util"
+	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/db"
+	"github.com/iyear/pure-live-core/pkg/util"
 	"github.com/xuri/excelize/v2"
 	"time"
 )

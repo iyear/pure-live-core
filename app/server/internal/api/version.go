@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iyear/pure-live/global"
-	"github.com/iyear/pure-live/pkg/ecode"
-	"github.com/iyear/pure-live/pkg/format"
+	"github.com/iyear/pure-live-core/global"
+	"github.com/iyear/pure-live-core/pkg/ecode"
+	"github.com/iyear/pure-live-core/pkg/format"
 )
 
 func GetVersion(c *gin.Context) {

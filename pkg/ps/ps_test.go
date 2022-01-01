@@ -2,7 +2,7 @@ package ps
 
 import (
 	"fmt"
-	"github.com/iyear/pure-live/pkg/util"
+	"github.com/iyear/pure-live-core/pkg/util"
 	"testing"
 	"time"
 )

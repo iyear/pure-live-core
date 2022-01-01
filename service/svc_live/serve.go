@@ -3,7 +3,7 @@ package svc_live
 import (
 	"context"
 	"github.com/gorilla/websocket"
-	"github.com/iyear/pure-live/model"
+	"github.com/iyear/pure-live-core/model"
 	"go.uber.org/zap"
 	"time"
 )
