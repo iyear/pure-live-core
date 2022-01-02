@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
+	"github.com/TarsCloud/TarsGo/tars/util/tools"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/model"
 	"github.com/iyear/pure-live-core/pkg/client/internal/abstract"
@@ -12,6 +13,7 @@ import (
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/push_msg"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_cmd"
+	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_user_info"
 	"github.com/iyear/pure-live-core/pkg/conf"
 	"github.com/iyear/pure-live-core/pkg/util"
 	"net/url"
@@ -85,31 +87,58 @@ func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
-// Host
+// Host .
 func (h *Huya) Host() string {
 	return "wss://cdnws.api.huya.com/"
 }
 
-// Enter
+// Enter .
 func (h *Huya) Enter(room string) (int, [][]byte, error) {
-	j, err := getRoomInfo(room)
+	roomInfo, err := getRoomInfo(room)
 	if err != nil {
 		return -1, nil, err
 	}
-	lYyid := j.Get("roomInfo.tLiveInfo.lYyid").Int()
-	lChannelId := j.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lChannelId").Int()
-	lSubChannelId := j.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lSubChannelId").Int()
+	lYyid := roomInfo.Get("roomInfo.tLiveInfo.lYyid").Int()
+	lChannelId := roomInfo.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lChannelId").Int()
+	lSubChannelId := roomInfo.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lSubChannelId").Int()
 	// fmt.Println(lYyid, lChannelId, lSubChannelId)
-	return websocket.BinaryMessage, [][]byte{getEnterMsg(lYyid, lChannelId, lSubChannelId)}, nil
+
+	info := ws_user_info.WSUserInfo{
+		LUid:       lYyid,
+		BAnonymous: true,
+		SGuid:      "",
+		SToken:     "",
+		LTid:       lChannelId,
+		LSid:       lSubChannelId,
+		LGroupId:   lYyid,
+		LGroupType: 3,
+	}
+
+	buf := codec.NewBuffer()
+	if err = info.WriteTo(buf); err != nil {
+		return -1, nil, err
+	}
+
+	wsCmd := ws_cmd.WebSocketCommand{
+		ICmdType: ewsCmdRegisterReq,
+		VData:    tools.ByteToInt8(buf.ToBytes()),
+	}
+
+	buf = codec.NewBuffer()
+
+	if err = wsCmd.WriteTo(buf); err != nil {
+		return -1, nil, err
+	}
+	return websocket.BinaryMessage, [][]byte{buf.ToBytes()}, nil
 }
 
-// HeartBeat
+// HeartBeat .
 func (h *Huya) HeartBeat() (int, []byte, error) {
 	msg, err := hex.DecodeString(hb)
 	return websocket.BinaryMessage, msg, err
 }
 
-// Handle
+// Handle .
 func (h *Huya) Handle(tp int, msg []byte) ([]model.Msg, bool, error) {
 	if tp != websocket.BinaryMessage {
 		return nil, false, nil
@@ -157,7 +186,7 @@ func (h *Huya) handleMsgPushReq(b []byte) ([]model.Msg, bool, error) {
 	return nil, false, nil
 }
 
-// SendDanmaku
+// SendDanmaku .
 func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) error {
 	_ = room
 	_ = content
@@ -166,7 +195,7 @@ func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) err
 	return fmt.Errorf("todo")
 }
 
-// Stop
+// Stop .
 func (h *Huya) Stop() {
 
 }
