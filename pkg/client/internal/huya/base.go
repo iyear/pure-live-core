@@ -2,7 +2,6 @@ package huya
 
 import (
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/TarsCloud/TarsGo/tars/util/tools"
@@ -10,6 +9,7 @@ import (
 	"github.com/iyear/pure-live-core/model"
 	"github.com/iyear/pure-live-core/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/danmaku"
+	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/heartbeat"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/push_msg"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_cmd"
@@ -20,24 +20,22 @@ import (
 	"strings"
 )
 
-const hb = "00031d0000690000006910032c3c4c56086f6e6c696e657569660f4f6e557365724865617274426561747d00003c0800010604745265711d00002f0a0a0c1600260036076164725f77617046000b1203aef00f2203aef00f3c426d5202605c60017c82000bb01f9cac0b8c980ca80c20"
-
 type Huya struct {
 	*abstract.Client
 }
 type H map[string]interface{}
 
-// NewHuya
+// NewHuya .
 func NewHuya() (model.Client, error) {
 	return &Huya{}, nil
 }
 
-// Plat
+// Plat .
 func (h *Huya) Plat() string {
 	return conf.PlatHuya
 }
 
-// GetPlayURL
+// GetPlayURL .
 func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	liveLine := ""
 	json, err := getRoomInfo(room)
@@ -72,7 +70,7 @@ func (h *Huya) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, err
 }
 
-// GetRoomInfo
+// GetRoomInfo .
 func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	j, err := getRoomInfo(room)
 	if err != nil {
@@ -134,8 +132,22 @@ func (h *Huya) Enter(room string) (int, [][]byte, error) {
 
 // HeartBeat .
 func (h *Huya) HeartBeat() (int, []byte, error) {
-	msg, err := hex.DecodeString(hb)
-	return websocket.BinaryMessage, msg, err
+	userID := heartbeat.UserId{
+		SHuyaUA: "webh5&1.0.0&websocket",
+	}
+
+	hbMsg := heartbeat.UserHeartBeatReq{
+		TId:         userID,
+		BWatchVideo: true,
+		ELineType:   1,
+	}
+
+	buf := codec.NewBuffer()
+
+	if err := hbMsg.WriteTo(buf); err != nil {
+		return -1, nil, err
+	}
+	return websocket.BinaryMessage, buf.ToBytes(), nil
 }
 
 // Handle .
