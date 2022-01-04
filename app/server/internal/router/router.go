@@ -29,6 +29,7 @@ func Init() *gin.Engine {
 		apiV1.GET("/live/serve", v1.Serve)
 		apiV1.GET("/live/play", v1.Play)
 		apiV1.GET("/live/room_info", v1.GetRoomInfo)
+		apiV1.POST("/live/room_infos/query", v1.GetRoomInfos)
 		apiV1.GET("/live/play_url", v1.GetPlayURL)
 		apiV1.POST("/live/danmaku/send", v1.SendDanmaku)
 
