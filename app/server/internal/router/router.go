@@ -4,17 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/iyear/pure-live-core/app/server/internal/api"
 	"github.com/iyear/pure-live-core/app/server/internal/api/v1"
-	"github.com/iyear/pure-live-core/app/server/internal/config"
 	"github.com/iyear/pure-live-core/app/server/internal/middleware"
-	"github.com/iyear/pure-live-core/pkg/util"
 )
 
 var r *gin.Engine
 
 func Init() *gin.Engine {
-	gin.SetMode(util.IF(config.Server.Debug, gin.DebugMode, gin.ReleaseMode).(string))
+	gin.SetMode(gin.ReleaseMode)
 	r = gin.New()
 
+	r.Use(middleware.Log())
 	r.Use(middleware.Recovery())
 	r.Use(middleware.CORS())
 	r.Use(middleware.Static())
