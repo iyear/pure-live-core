@@ -106,6 +106,82 @@ link 直播间链接
 
 title 直播间标题
 
+### GetRoomInfos 批量获取直播间信息
+
+> **POST** /api/v1/live/room_infos/query
+
+**Query:**
+
+请求参数为包含以下内容的 map，map 的 key 为 string 类型可自行定义
+
+| 参数名 |              内容              |  示例   |
+| :----: | :----------------------------: |:-----:|
+|  plat  |             平台名             | douyu |
+|  room  | 直播间(短号、长号、完整号均可) | 8302  |
+
+请求示例：`/api/v1/live/room_infos/query`
+
+``` json
+{
+  "1": {
+    "plat": "douyu",
+    "room": "8302"
+  },
+  "2": {
+    "plat": "bilibili",
+    "room": "732602"
+  },
+  "3": {
+    "plat": "douyu",
+    "room": "96291"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "1": {
+      "status": 0,
+      "room": "8302",
+      "upper": "祈风1v9",
+      "link": "https://www.douyu.com/8302",
+      "title": "国服第一VN！一个打八百多个！"
+    },
+    "2": {
+      "status": 1,
+      "room": "732602",
+      "upper": "大祥哥来了",
+      "link": "https://live.bilibili.com/732602",
+      "title": "申鹤我来了"
+    },
+    "3": {
+      "status": 0,
+      "room": "96291",
+      "upper": "东北大鹌鹑",
+      "link": "https://www.douyu.com/96291",
+      "title": "东北大鹌鹑 抄作业都抄不明白"
+    }
+  }
+}
+```
+
+响应也为 map 格式，key 与请求的相同
+
+status 开播情况 0:未开播 1:开播
+
+room 真实房间号
+
+upper 主播名
+
+link 直播间链接
+
+title 直播间标题
+
 ### GetPlayURL 获取直播流信息
 
 > GET /api/v1/live/play_url
