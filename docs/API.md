@@ -108,34 +108,38 @@ title 直播间标题
 
 ### GetRoomInfos 批量获取直播间信息
 
-> **POST** /api/v1/live/room_infos/query
+> **POST** /api/v1/live/room_infos
 
-**Query:**
+**Body:**
 
-请求参数为包含以下内容的 map，map 的 key 为 string 类型可自行定义
+以下结构的数组形式
 
 | 参数名 |              内容              |  示例   |
 | :----: | :----------------------------: |:-----:|
+|  id  |      此次请求数组唯一ID，用于获取响应    | 2 |
 |  plat  |             平台名             | douyu |
 |  room  | 直播间(短号、长号、完整号均可) | 8302  |
 
 请求示例：`/api/v1/live/room_infos/query`
 
-``` json
-{
-  "1": {
+```json
+[
+  {
+    "id": 1,
     "plat": "douyu",
     "room": "8302"
   },
-  "2": {
+  {
+    "id": 2,
     "plat": "bilibili",
     "room": "732602"
   },
-  "3": {
+  {
+    "id": 3,
     "plat": "douyu",
     "room": "96291"
   }
-}
+]
 ```
 
 **Response:**
@@ -157,10 +161,10 @@ title 直播间标题
       "room": "732602",
       "upper": "大祥哥来了",
       "link": "https://live.bilibili.com/732602",
-      "title": "申鹤我来了"
+      "title": "申鹤第一生产线"
     },
     "3": {
-      "status": 0,
+      "status": 1,
       "room": "96291",
       "upper": "东北大鹌鹑",
       "link": "https://www.douyu.com/96291",
@@ -170,7 +174,7 @@ title 直播间标题
 }
 ```
 
-响应也为 map 格式，key 与请求的相同
+响应为 `map` 格式，`id` 对应请求时的 `id`
 
 status 开播情况 0:未开播 1:开播
 
@@ -204,7 +208,7 @@ title 直播间标题
   "code": 0,
   "msg": "ok",
   "data": {
-    "qn": 0, 
+    "qn": 0,
     "desc": "原画",
     "origin": "https://d1--cn-gotcha03.bilivideo.com/live-bvc/723585/live_4578433_9339544.flv?cdn=cn-gotcha03&expires=16386...",
     "cors": false,
@@ -244,7 +248,7 @@ type 直播流编码格式
 
 ## 直播监听类
 
-### Serve  监听直播实时信息
+### Serve 监听直播实时信息
 
 > Websocket /api/v1/live/serve
 
@@ -261,12 +265,13 @@ type 直播流编码格式
 
 ```json
 {
-    "type": "",
-    "data": {}
+  "type": "",
+  "data": {}
 }
 ```
 
-同时， `Upgrade Websocket` 的 `Response Header` 会在 `Set-Cookie` 头中设置 `uuid` 字段，这个值是后续直播操作类的唯一标识，`core` 会保存其对应的客户端和 `websocket` 连接。
+同时， `Upgrade Websocket` 的 `Response Header` 会在 `Set-Cookie` 头中设置 `uuid` 字段，这个值是后续直播操作类的唯一标识，`core`
+会保存其对应的客户端和 `websocket` 连接。
 
 前端应当在成功建立连接后立刻保存 `uuid` 值，而不是依靠 `cookie` 保存，否则在多个标签页中会造成 `uuid` 的覆盖。
 
@@ -339,10 +344,10 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "id": "412a657e-d196-44de-8eaf-00e45f79f71d",
-    "content": "哔哩哔哩干杯~",
-    "type": 0,
-    "color": 16777215
+  "id": "412a657e-d196-44de-8eaf-00e45f79f71d",
+  "content": "哔哩哔哩干杯~",
+  "type": 0,
+  "color": 16777215
 }
 ```
 
@@ -350,8 +355,8 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "code": 0,
-    "msg": "ok"
+  "code": 0,
+  "msg": "ok"
 }
 ```
 
@@ -377,7 +382,10 @@ color 弹幕十进制颜色
 请求示例：`/api/v1/fav/list/add`
 
 ```json
-{    "title": "测试收藏夹",    "order": 30}
+{
+  "title": "测试收藏夹",
+  "order": 30
+}
 ```
 
 **Response:**
@@ -391,7 +399,7 @@ color 弹幕十进制颜色
     "title": "测试ecccqqq",
     "order": 40,
     "created_at": 1638615636,
-    "updated_at": 1638615636 
+    "updated_at": 1638615636
   }
 }
 ```
@@ -440,9 +448,7 @@ color 弹幕十进制颜色
 
 **Query:**
 
-| 参数名 |   内容   | 示例 |
-| :----: | :------: | :--: |
-|   id   | 收藏夹ID |  1   |
+| 参数名 | 内容 | 示例 | | :----: | :------: | :--: | | id | 收藏夹ID | 1 |
 
 请求示例：`/api/v1/fav/list/get?id=1`
 
@@ -500,15 +506,14 @@ color 弹幕十进制颜色
 
 **Body:** (JSON编码)
 
-| 参数名 |                     内容                      | 示例 |
-| :----: | :-------------------------------------------: | :--: |
-|   id   | 收藏夹ID(为1时会报不允许删除默认收藏夹的错误) |  3   |
+| 参数名 | 内容 | 示例 | | :----: | :-------------------------------------------: | :--: | | id | 收藏夹ID(为1时会报不允许删除默认收藏夹的错误) | 3
+|
 
 请求示例：`/api/v1/fav/list/del`
 
 ```json
 {
-    "id": 6
+  "id": 6
 }
 ```
 
@@ -516,8 +521,8 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "code": 0,
-    "msg": "ok"
+  "code": 0,
+  "msg": "ok"
 }
 ```
 
@@ -539,9 +544,9 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "id": 6,
-    "title": "测试new",
-    "order": 70
+  "id": 6,
+  "title": "测试new",
+  "order": 70
 }
 ```
 
@@ -581,11 +586,11 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "fid": 6,
-    "order": 30,
-    "plat": "bilibili",
-    "room": "469",
-    "upper": "老骚豆腐"
+  "fid": 6,
+  "order": 30,
+  "plat": "bilibili",
+  "room": "469",
+  "upper": "老骚豆腐"
 }
 ```
 
@@ -614,9 +619,7 @@ color 弹幕十进制颜色
 
 **Query:**
 
-| 参数名 |   内容   | 示例 |
-| :----: | :------: | :--: |
-|   id   | 收藏项ID |  21  |
+| 参数名 | 内容 | 示例 | | :----: | :------: | :--: | | id | 收藏项ID | 21 |
 
 请求示例：`/api/v1/fav/get?id=21`
 
@@ -645,15 +648,13 @@ color 弹幕十进制颜色
 
 **Body:** (JSON编码)
 
-| 参数名 |   内容   | 示例 |
-| :----: | :------: | :--: |
-|   id   | 收藏项ID |  21  |
+| 参数名 | 内容 | 示例 | | :----: | :------: | :--: | | id | 收藏项ID | 21 |
 
 请求示例：`/api/v1/fav/del`
 
 ```json
 {
-    "id": 21
+  "id": 21
 }
 ```
 
@@ -686,11 +687,11 @@ color 弹幕十进制颜色
 
 ```json
 {
-    "id": 20,
-    "order": 70,
-    "plat": "douyu",
-    "room": "101",
-    "upper": "pdd"
+  "id": 20,
+  "order": 70,
+  "plat": "douyu",
+  "room": "101",
+  "upper": "pdd"
 }
 ```
 
