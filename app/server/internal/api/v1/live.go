@@ -9,6 +9,7 @@ import (
 	"github.com/iyear/pure-live-core/pkg/format"
 	"github.com/iyear/pure-live-core/service/svc_live"
 	"go.uber.org/zap"
+	"strconv"
 	"sync"
 )
 
@@ -50,7 +51,8 @@ func GetRoomInfo(c *gin.Context) {
 
 // GetRoomInfos 批量获取房间信息
 func GetRoomInfos(c *gin.Context) {
-	var req map[string]struct {
+	var req []*struct {
+		ID   uint64 `form:"id" binding:"required" json:"id"`
 		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
 		Room string `form:"room" binding:"required" json:"room"`
 	}
@@ -58,36 +60,34 @@ func GetRoomInfos(c *gin.Context) {
 		format.HTTP(c, ecode.InvalidParams, nil, nil)
 		return
 	}
-	zap.S().Infow("GetRoomInfos: ", "req", req)
+	zap.S().Debugw("GetRoomInfos: ", "req", req)
 
 	// chan 中使用的临时结构体
-	type idWithRoomInfo struct {
-		Id       string
+	type InfoWithID struct {
+		ID       uint64
 		RoomInfo *model.RoomInfo
 	}
 
-	var wg sync.WaitGroup
+	wg := sync.WaitGroup{}
 	rsp := make(map[string]*model.RoomInfo, len(req)) // 响应
-	ch := make(chan *idWithRoomInfo)                  // 并发获取的房间信息将依次写入该channel
+	ch := make(chan *InfoWithID)                      // 并发获取的房间信息将依次写入该channel
 
 	// 并发获取房间信息
 	wg.Add(len(req))
-	for key := range req {
-		r := req[key]
-		id := key
-		go func() {
-			roomInfo, err := svc_live.GetRoomInfo(r.Plat, r.Room)
-			if err == nil {
-				ch <- &idWithRoomInfo{
-					Id:       id,
-					RoomInfo: roomInfo,
-				}
-				zap.S().Debugw("GetRoomInfos: ", "plat", r.Plat, "room", r.Room, "roomInfo", roomInfo)
-			} else {
-				zap.S().Debugw("GetRoomInfos: ", "plat", r.Plat, "room", r.Room, "err", err)
+	for _, r := range req {
+		go func(id uint64, plat, room string) {
+			defer wg.Done()
+			info, err := svc_live.GetRoomInfo(plat, room)
+			if err != nil {
+				zap.S().Debugw("GetRoomInfos: ", "plat", plat, "room", room, "err", err)
+				return
 			}
-			wg.Done()
-		}()
+			ch <- &InfoWithID{
+				ID:       id,
+				RoomInfo: info,
+			}
+			zap.S().Debugw("GetRoomInfos: ", "plat", plat, "room", room, "info", info)
+		}(r.ID, r.Plat, r.Room)
 	}
 
 	go func() {
@@ -96,7 +96,7 @@ func GetRoomInfos(c *gin.Context) {
 	}()
 
 	for info := range ch {
-		rsp[info.Id] = info.RoomInfo
+		rsp[strconv.FormatUint(info.ID, 10)] = info.RoomInfo
 	}
 
 	format.HTTP(c, ecode.Success, nil, rsp)
