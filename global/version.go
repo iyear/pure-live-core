@@ -7,7 +7,7 @@ import (
 
 const (
 	// Version pure-live version desc
-	Version = "v0.1.0.211224-beta"
+	Version = "v0.1.0.220106"
 )
 
 // GetRuntime get runtime info
