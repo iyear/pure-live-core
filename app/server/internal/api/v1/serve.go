@@ -3,7 +3,6 @@ package v1
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/app/server/internal/config"
 	"github.com/iyear/pure-live-core/global"
@@ -114,7 +113,7 @@ func getUpgradeHeader(id string) http.Header {
 func getUniqueID() string {
 	id := ""
 	for {
-		id = uuid.New().String()
+		id = util.RandLetters(10)
 		if _, ok := global.Hub.Conn.Load(id); !ok {
 			break
 		}

@@ -1,0 +1,14 @@
+module ws_user_info
+{
+    struct WSUserInfo
+    {
+        0 optional long   lUid;
+        1 optional bool   bAnonymous;
+        2 optional string sGuid;
+        3 optional string sToken;
+        4 optional long   lTid;
+        5 optional long   lSid;
+        6 optional long   lGroupId;
+        7 optional long   lGroupType;
+    };
+};

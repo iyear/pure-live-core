@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"golang.org/x/net/proxy"
+	"math/rand"
 	"net"
 	"strings"
 )
@@ -50,4 +51,14 @@ func MustGetSocks5(host string, port int, user, password string) proxy.Dialer {
 		return &net.Dialer{}
 	}
 	return dialer
+}
+
+const letters = "1234567890abcdefghijklmnopqrstuvwxyz"
+
+func RandLetters(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
