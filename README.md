@@ -253,4 +253,4 @@ https://github.com/BacooTang/huya-danmu
 
 ## 🔖 LICENSE
 
-GPL-3.0 License
+AGPL-3.0 License
