@@ -41,7 +41,7 @@ func TestEGame(t *testing.T) {
 	resp := ""
 	tmpl := `{"0":{"module":"pgg_live_read_svr","method":"get_live_and_profile_info","param":{"anchor_id":[[id]],"layout_id":"hot","index":1,"other_uid":0}}}`
 	err := gout.GET("https://share.egame.qq.com/cgi-bin/pgg_async_fcgi").SetQuery(gout.H{
-		"param": strings.ReplaceAll(tmpl, "[[id]]", "383204988"),
+		"param": strings.ReplaceAll(tmpl, "[[id]]", "436309399"),
 	}).BindBody(&resp).Do()
 	if err != nil {
 		log.Println(err)
@@ -75,13 +75,28 @@ func TestEGame(t *testing.T) {
 }
 
 func TestEGameWs(t *testing.T) {
-	r, err := getInfo("303441526")
+	room := "436309399"
+	r, err := getRoomInfo(room)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	_ = r.Get("video_info.pid").String()
+	pid := r.Get("video_info.pid").String()
 
-	_ = `{"0":{"module":"pgg.ws_token_go_svr.DefObj","method":"get_token","param":{"scene_flag":16,"subinfo":{"page":{"scene":1,"page_id":{{room}},"str_id":"{{pid}}","msg_type_list":[1,2]}},"version":1,"message_seq":-1,"dc_param":{"params":{"info":{"aid":"{{}}"}},"position":{"page_id":"QG_HEARTBEAT_PAGE_LIVE_ROOM"},"refer":{}},"other_uid":0}}}`
+	// params = {
+	//         'param': json.dumps({"0":{"module":"pgg.ws_token_go_svr.DefObj","method":"get_token","param":{"scene_flag":16,"subinfo":{"page":{"scene":1,"page_id":int(page_id),"str_id":str(str_id),"msg_type_list":[1,2]}},"version":1,"message_seq":-1,"dc_param":{"params":{"info":{"aid":aid}},"position":{"page_id":"QG_HEARTBEAT_PAGE_LIVE_ROOM"},"refer":{}},"other_uid":0}}})
+	//                }
+	html := ""
+	tmpl := `{"0":{"module":"pgg.ws_token_go_svr.DefObj","method":"get_token","param":{"scene_flag":16,"subinfo":{"page":{"scene":1,"page_id":{{room}},"str_id":"{{pid}}","msg_type_list":[1,2]}},"version":1,"message_seq":-1,"dc_param":{"params":{"info":{"aid":"{{room}}"}},"position":{"page_id":"QG_HEARTBEAT_PAGE_LIVE_ROOM"},"refer":{}},"other_uid":0}}}`
+	param := strings.NewReplacer("{{room}}", room, "{{pid}}", pid).Replace(tmpl)
+
+	fmt.Println(param)
+
+	_ = gout.POST("https://share.egame.qq.com/cgi-bin/pgg_async_fcgi").
+		SetWWWForm(gout.H{
+			"param": param,
+		}).BindBody(&html).Do()
+
+	fmt.Println(html)
 }

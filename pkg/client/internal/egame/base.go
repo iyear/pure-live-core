@@ -2,50 +2,30 @@ package egame
 
 import (
 	"fmt"
-	"github.com/guonaihong/gout"
+	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/model"
 	"github.com/iyear/pure-live-core/pkg/client/internal/abstract"
 	"github.com/iyear/pure-live-core/pkg/conf"
 	"github.com/iyear/pure-live-core/pkg/util"
-	"github.com/tidwall/gjson"
-	"strings"
 )
 
 type EGame struct {
 	*abstract.Client
 }
 
-// NewEGame
+// NewEGame .
 func NewEGame() (model.Client, error) {
 	return &EGame{}, nil
 }
 
-// Plat
+// Plat .
 func (e *EGame) Plat() string {
 	return conf.PlatEGame
 }
 
-func getInfo(room string) (*gjson.Result, error) {
-	resp := ""
-	tmpl := `{"0":{"module":"pgg_live_read_svr","method":"get_live_and_profile_info","param":{"anchor_id":{{id}},"layout_id":"hot","index":1,"other_uid":0}}}`
-
-	err := gout.GET("https://share.egame.qq.com/cgi-bin/pgg_async_fcgi").
-		SetQuery(gout.H{
-			"param": strings.ReplaceAll(tmpl, "{{id}}", room),
-		}).BindBody(&resp).Do()
-
-	if err != nil {
-		return nil, err
-	}
-
-	r := gjson.Get(resp, "data.\\0.retBody.data")
-	return &r, nil
-
-}
-
-// GetPlayURL
+// GetPlayURL .
 func (e *EGame) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
-	r, err := getInfo(room)
+	r, err := getRoomInfo(room)
 	if err != nil {
 		return nil, err
 	}
@@ -60,9 +40,9 @@ func (e *EGame) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, nil
 }
 
-// GetRoomInfo
+// GetRoomInfo .
 func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
-	r, err := getInfo(room)
+	r, err := getRoomInfo(room)
 	if err != nil {
 		return nil, err
 	}
@@ -77,30 +57,45 @@ func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
 	}, nil
 }
 
-// Host
+// Host .
 func (e *EGame) Host() string {
 	return "wss://barragepush.egame.qq.com/sub"
 }
 
-// Enter
-func (e *EGame) Enter(room string) (tp int, data [][]byte, err error) {
-	_ = room
-	return 0, nil, fmt.Errorf("not supported")
+// Enter .
+func (e *EGame) Enter(room string) (int, [][]byte, error) {
+	token, err := getWSToken(room)
+	if err != nil {
+		return -1, nil, err
+	}
+
+	body := append([]byte{uint8(7)}, util.BigEndianUint32(uint32(len(token)))...)
+	body = append(body, []byte(token)...)
+
+	header := append(util.BigEndianUint32(uint32(18+len(body))), util.BigEndianUint16(18)...)
+	header = append(header, util.BigEndianUint16(1)...)
+	header = append(header, util.BigEndianUint16(1)...)
+	header = append(header, util.BigEndianUint32(0)...)
+	header = append(header, util.BigEndianUint16(0)...)
+	header = append(header, util.BigEndianUint16(0)...)
+
+	data := append(header, body...)
+	return websocket.BinaryMessage, [][]byte{data}, nil
 }
 
-// Handle
+// Handle .
 func (e *EGame) Handle(tp int, data []byte) (msg []model.Msg, matched bool, err error) {
 	_ = tp
 	_ = data
 	return nil, false, nil
 }
 
-// HeartBeat
+// HeartBeat .
 func (e *EGame) HeartBeat() (tp int, data []byte, err error) {
 	return 0, nil, fmt.Errorf("not supported")
 }
 
-// SendDanmaku
+// SendDanmaku .
 func (e *EGame) SendDanmaku(room string, content string, tp int, color int64) error {
 	_ = room
 	_ = content
@@ -109,7 +104,7 @@ func (e *EGame) SendDanmaku(room string, content string, tp int, color int64) er
 	return fmt.Errorf("not supported")
 }
 
-// Stop
+// Stop .
 func (e *EGame) Stop() {
 
 }

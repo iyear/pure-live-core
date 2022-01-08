@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/binary"
 	"fmt"
 	"golang.org/x/net/proxy"
 	"math/rand"
@@ -61,4 +62,22 @@ func RandLetters(n int) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func BigEndianUint16(v uint16) []byte {
+	buf := make([]byte, 2)
+	binary.BigEndian.PutUint16(buf, v)
+	return buf
+}
+
+func BigEndianUint32(v uint32) []byte {
+	buf := make([]byte, 4)
+	binary.BigEndian.PutUint32(buf, v)
+	return buf
+}
+
+func BigEndianUint64(v uint64) []byte {
+	buf := make([]byte, 8)
+	binary.BigEndian.PutUint64(buf, v)
+	return buf
 }
