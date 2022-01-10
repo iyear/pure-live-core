@@ -2,6 +2,7 @@ package douyu
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"github.com/dop251/goja"
 	"github.com/gorilla/websocket"
@@ -12,6 +13,7 @@ import (
 	"github.com/iyear/pure-live-core/pkg/request"
 	"github.com/iyear/pure-live-core/pkg/util"
 	"github.com/tidwall/gjson"
+	"go.uber.org/zap"
 	"regexp"
 	"strconv"
 	"strings"
@@ -149,23 +151,32 @@ func (d *Douyu) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	}, nil
 }
 
-// GetRoomInfo
+// GetRoomInfo 通过房间号获取房间信息
 func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
-	html := ""
-	if err := request.HTTP().GET(fmt.Sprintf("https://m.douyu.com/%s", room)).BindBody(&html).Do(); err != nil {
+	var douYuRoomInfoRsp struct {
+		Error int `json:"error"`
+		Data  struct {
+			RoomId     string `json:"room_id"`
+			OwnerName  string `json:"owner_name"`
+			RoomStatus string `json:"room_status"`
+			RoomName   string `json:"room_name"`
+		} `json:"data"`
+	}
+	if err := request.HTTP().GET(fmt.Sprintf("https://open.douyucdn.cn/api/RoomApi/room/%s", room)).BindJSON(&douYuRoomInfoRsp).Do(); err != nil {
+		zap.S().Errorf("Douyu: GetRoomInfo: http.Get room:%v, err:%v", room, err)
 		return nil, err
 	}
-	status := util.GetBetweenString(html, `"isLive":`, `,"showTime"`)
-	rid := util.GetBetweenString(html, `"rid":`, `,"vipId"`)
-	upper := util.GetBetweenString(html, `"nickname":"`, `","ownerId"`)
-	link := fmt.Sprintf("https://www.douyu.com/%s", rid)
-	title := util.GetBetweenString(html, `"roomName":"`, `","nickname"`)
+	if douYuRoomInfoRsp.Error != 0 {
+		zap.S().Errorf("Douyu: GetRoomInfo: rsp err code not 0, room:%v", room)
+		return nil, errors.New("request err")
+	}
+	link := fmt.Sprintf("https://www.douyu.com/%s", douYuRoomInfoRsp.Data.RoomId)
 	return &model.RoomInfo{
-		Status: util.IF(status == "1", 1, 0).(int),
-		Room:   rid,
-		Upper:  upper,
+		Status: util.IF(douYuRoomInfoRsp.Data.RoomStatus == "1", 1, 0).(int),
+		Room:   douYuRoomInfoRsp.Data.RoomId,
+		Upper:  douYuRoomInfoRsp.Data.OwnerName,
 		Link:   link,
-		Title:  title,
+		Title:  douYuRoomInfoRsp.Data.RoomName,
 	}, nil
 }
 
