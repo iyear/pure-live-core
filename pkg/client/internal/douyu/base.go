@@ -153,7 +153,7 @@ func (d *Douyu) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 
 // GetRoomInfo 通过房间号获取房间信息
 func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
-	var douYuRoomInfoRsp struct {
+	var info struct {
 		Error int `json:"error"`
 		Data  struct {
 			RoomId     string `json:"room_id"`
@@ -162,21 +162,21 @@ func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 			RoomName   string `json:"room_name"`
 		} `json:"data"`
 	}
-	if err := request.HTTP().GET(fmt.Sprintf("https://open.douyucdn.cn/api/RoomApi/room/%s", room)).BindJSON(&douYuRoomInfoRsp).Do(); err != nil {
-		zap.S().Errorf("Douyu: GetRoomInfo: http.Get room:%v, err:%v", room, err)
+	if err := request.HTTP().GET(fmt.Sprintf("https://open.douyucdn.cn/api/RoomApi/room/%s", room)).BindJSON(&info).Do(); err != nil {
+		zap.S().Warnf("Douyu: GetRoomInfo: http.Get room:%v, err:%v", room, err)
 		return nil, err
 	}
-	if douYuRoomInfoRsp.Error != 0 {
-		zap.S().Errorf("Douyu: GetRoomInfo: rsp err code not 0, room:%v", room)
+	if info.Error != 0 {
+		zap.S().Warnf("Douyu: GetRoomInfo: rsp err code not 0, room:%v", room)
 		return nil, errors.New("request err")
 	}
-	link := fmt.Sprintf("https://www.douyu.com/%s", douYuRoomInfoRsp.Data.RoomId)
+	link := fmt.Sprintf("https://www.douyu.com/%s", info.Data.RoomId)
 	return &model.RoomInfo{
-		Status: util.IF(douYuRoomInfoRsp.Data.RoomStatus == "1", 1, 0).(int),
-		Room:   douYuRoomInfoRsp.Data.RoomId,
-		Upper:  douYuRoomInfoRsp.Data.OwnerName,
+		Status: util.IF(info.Data.RoomStatus == "1", 1, 0).(int),
+		Room:   info.Data.RoomId,
+		Upper:  info.Data.OwnerName,
 		Link:   link,
-		Title:  douYuRoomInfoRsp.Data.RoomName,
+		Title:  info.Data.RoomName,
 	}, nil
 }
 
