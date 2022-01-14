@@ -5,11 +5,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/iyear/pure-live-core/global"
 	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/conf"
 	"github.com/iyear/pure-live-core/pkg/ecode"
 	"github.com/iyear/pure-live-core/pkg/format"
 	"github.com/iyear/pure-live-core/service/svc_live"
 	"go.uber.org/zap"
 	"sync"
+	"time"
 )
 
 func GetPlayURL(c *gin.Context) {
@@ -76,11 +78,21 @@ func GetRoomInfos(c *gin.Context) {
 	for _, r := range req {
 		go func(id string, plat, room string) {
 			defer wg.Done()
+
+			if info, found := global.Cache.Get(format.Key(conf.BizRoomInfo, plat, room)); found {
+				ch <- &InfoWithID{
+					ID:       id,
+					RoomInfo: info.(*model.RoomInfo),
+				}
+				return
+			}
+
 			info, err := svc_live.GetRoomInfo(plat, room)
 			if err != nil {
 				zap.S().Debugw("GetRoomInfos: ", "plat", plat, "room", room, "err", err)
 				return
 			}
+			global.Cache.Set(format.Key(conf.BizRoomInfo, plat, room), info, 1*time.Minute)
 			ch <- &InfoWithID{
 				ID:       id,
 				RoomInfo: info,

@@ -18,6 +18,7 @@ require (
 	github.com/iyear/sqlite v1.0.2
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/q191201771/lal v0.26.1-0.20211127051713-e208a3ac3635
 	github.com/q191201771/naza v0.28.0
 	github.com/shirou/gopsutil/v3 v3.21.11

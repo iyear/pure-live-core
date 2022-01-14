@@ -32,3 +32,9 @@ const (
 	StreamHls  = "hls"
 	StreamM3U8 = "m3u8"
 )
+
+// biz key
+
+const (
+	BizRoomInfo = "ri"
+)
