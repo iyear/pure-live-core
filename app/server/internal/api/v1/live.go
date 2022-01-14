@@ -9,7 +9,6 @@ import (
 	"github.com/iyear/pure-live-core/pkg/format"
 	"github.com/iyear/pure-live-core/service/svc_live"
 	"go.uber.org/zap"
-	"strconv"
 	"sync"
 )
 
@@ -52,7 +51,7 @@ func GetRoomInfo(c *gin.Context) {
 // GetRoomInfos 批量获取房间信息
 func GetRoomInfos(c *gin.Context) {
 	var req []*struct {
-		ID   uint64 `form:"id" binding:"required" json:"id"`
+		ID   string `form:"id" binding:"required" json:"id"`
 		Plat string `form:"plat" binding:"required,max=15" json:"plat"`
 		Room string `form:"room" binding:"required" json:"room"`
 	}
@@ -64,7 +63,7 @@ func GetRoomInfos(c *gin.Context) {
 
 	// chan 中使用的临时结构体
 	type InfoWithID struct {
-		ID       uint64
+		ID       string
 		RoomInfo *model.RoomInfo
 	}
 
@@ -75,7 +74,7 @@ func GetRoomInfos(c *gin.Context) {
 	// 并发获取房间信息
 	wg.Add(len(req))
 	for _, r := range req {
-		go func(id uint64, plat, room string) {
+		go func(id string, plat, room string) {
 			defer wg.Done()
 			info, err := svc_live.GetRoomInfo(plat, room)
 			if err != nil {
@@ -96,7 +95,7 @@ func GetRoomInfos(c *gin.Context) {
 	}()
 
 	for info := range ch {
-		rsp[strconv.FormatUint(info.ID, 10)] = info.RoomInfo
+		rsp[info.ID] = info.RoomInfo
 	}
 
 	format.HTTP(c, ecode.Success, nil, rsp)
