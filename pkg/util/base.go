@@ -81,3 +81,20 @@ func BigEndianUint64(v uint64) []byte {
 	binary.BigEndian.PutUint64(buf, v)
 	return buf
 }
+
+func GetCookie(cookies string, key string) string {
+	if cookies == "" {
+		return ""
+	}
+	if key == "" {
+		return ""
+	}
+	cookieArr := strings.Split(cookies, ";")
+	for _, cookie := range cookieArr {
+		t := strings.Split(strings.TrimSpace(cookie), "=")
+		if t[0] == key {
+			return t[1]
+		}
+	}
+	return ""
+}

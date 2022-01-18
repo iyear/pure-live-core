@@ -1,0 +1,44 @@
+module send_msg_req
+{
+    struct UserId
+    {
+        0 optional long   lUid;
+        1 optional string sGuid;
+        2 optional string sToken;
+        3 optional string sHuYaUA;
+        4 optional string sCookie;
+    };
+    struct ContentFormat {
+        0 optional int iFontColor;
+        1 optional int iFontSize;
+        2 optional int iPopupStyle;
+    };
+    struct BulletFormat{
+        0 optional int iFontColor;
+        1 optional int iFontSize;
+        2 optional int iTextSpeed;
+        3 optional int iTransitionType;
+        4 optional int iPopupStyle;
+    };
+    struct UidNickName {
+        0 optional long lUid;
+        1 optional string sNickName;
+    };
+    struct MessageTagInfo{
+        0 optional int iAppId;
+        1 optional string sTag;
+    };
+    struct SendMessageReq
+    {
+        0 optional UserId tUserId;
+        1 optional long lTid;
+        2 optional long lSid;
+        3 optional string sContent;
+        4 optional int iShowMode;
+        5 optional ContentFormat tFormat;
+        6 optional BulletFormat tBulletFormat;
+        7 optional vector<UidNickName> vAtSomeone;
+        8 optional long lPid;
+        9 optional vector<MessageTagInfo> vTagInfo;
+    };
+};

@@ -1,7 +1,9 @@
 package huya
 
 import (
+	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/TarsCloud/TarsGo/tars/protocol/codec"
 	"github.com/TarsCloud/TarsGo/tars/util/tools"
@@ -12,22 +14,35 @@ import (
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/heartbeat"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/online"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/push_msg"
+	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/send_msg_req"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_cmd"
 	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_user_info"
+	"github.com/iyear/pure-live-core/pkg/client/internal/huya/internal/tars/ws_verify_cookie_req"
 	"github.com/iyear/pure-live-core/pkg/conf"
 	"github.com/iyear/pure-live-core/pkg/util"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
 type Huya struct {
 	*abstract.Client
+	Cookies string
+	UID     int64
 }
 type H map[string]interface{}
 
 // NewHuya .
 func NewHuya() (model.Client, error) {
-	return &Huya{}, nil
+	if !conf.Account.Huya.Enable {
+		return &Huya{Cookies: "", UID: 0}, nil
+	}
+
+	yyuid, err := strconv.ParseInt(util.GetCookie(conf.Account.Huya.Cookies, "yyuid"), 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	return &Huya{Cookies: conf.Account.Huya.Cookies, UID: yyuid}, nil
 }
 
 // Plat .
@@ -200,11 +215,107 @@ func (h *Huya) handleMsgPushReq(b []byte) ([]model.Msg, bool, error) {
 
 // SendDanmaku .
 func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) error {
-	_ = room
-	_ = content
-	_ = tp
+	// TODO 测试无法发送，还未知原因
+	return errors.New("todo")
 	_ = color
-	return fmt.Errorf("todo")
+	if h.Cookies == "" {
+		return errors.New("cookies not exist")
+	}
+
+	ctx, stop := context.WithCancel(context.Background())
+	defer stop()
+	lbuf, err := login(h.UID, h.Cookies)
+	if err != nil {
+		return err
+	}
+
+	conn, _, err := websocket.DefaultDialer.DialContext(ctx, h.Host(), nil)
+	if err != nil {
+		return err
+	}
+
+	tp, enter, err := h.Enter(room)
+	if err != nil {
+		return err
+	}
+	if err = conn.WriteMessage(tp, enter[0]); err != nil {
+		return err
+	}
+	// login msg
+	if err = conn.WriteMessage(websocket.BinaryMessage, lbuf); err != nil {
+		return err
+	}
+	info, err := getRoomInfo(room)
+	if err != nil {
+		return err
+	}
+
+	lYyid := info.Get("roomInfo.tLiveInfo.lYyid").Int()
+	lChannelId := info.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lChannelId").Int()
+	lSubChannelId := info.Get("roomInfo.tLiveInfo.tLiveStreamInfo.vStreamInfo.value.0.lSubChannelId").Int()
+	// fmt.Println(lYyid,lChannelId,lSubChannelId)
+	fmt.Println(h.UID)
+	req := send_msg_req.SendMessageReq{
+		TUserId: send_msg_req.UserId{
+			LUid:    h.UID,
+			SGuid:   "",
+			SToken:  "",
+			SHuYaUA: "webh5&1.0.0&websocket",
+			SCookie: h.Cookies,
+		},
+		LTid:      lChannelId,
+		LSid:      lSubChannelId,
+		SContent:  content,
+		IShowMode: 0,
+		TFormat: send_msg_req.ContentFormat{
+			IFontColor:  -1,
+			IFontSize:   4,
+			IPopupStyle: 0,
+		},
+		TBulletFormat: send_msg_req.BulletFormat{
+			IFontColor:      -1,
+			IFontSize:       4,
+			ITextSpeed:      0,
+			ITransitionType: 1,
+			IPopupStyle:     0,
+		},
+		VAtSomeone: []send_msg_req.UidNickName{},
+		LPid:       lYyid,
+		VTagInfo:   []send_msg_req.MessageTagInfo{{IAppId: 1, STag: ""}},
+	}
+
+	sbuf := codec.NewBuffer()
+	if err = req.WriteTo(sbuf); err != nil {
+		return err
+	}
+	if err = conn.WriteMessage(websocket.BinaryMessage, sbuf.ToBytes()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func login(uid int64, cookies string) ([]byte, error) {
+	verify := ws_verify_cookie_req.WSVerifyCookieReq{
+		LUid:    uid,
+		SUA:     "webh5&1.0.0&websocket",
+		SCookie: cookies,
+	}
+
+	vbuf := codec.NewBuffer()
+	if err := verify.WriteTo(vbuf); err != nil {
+		return nil, err
+	}
+	wsCmd := ws_cmd.WebSocketCommand{
+		ICmdType: ewsCmdC2SVerifyCookieReq,
+		VData:    tools.ByteToInt8(vbuf.ToBytes()),
+	}
+
+	wbuf := codec.NewBuffer()
+	if err := wsCmd.WriteTo(wbuf); err != nil {
+		return nil, err
+	}
+
+	return wbuf.ToBytes(), nil
 }
 
 // Stop .

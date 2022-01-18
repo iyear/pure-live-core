@@ -1,0 +1,9 @@
+module ws_verify_cookie_req
+{
+    struct WSVerifyCookieReq
+    {
+        0 optional long   lUid;
+        1 optional string sUA;
+        2 optional string sCookie;
+    };
+};

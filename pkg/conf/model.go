@@ -7,7 +7,8 @@ type account struct {
 }
 
 type huya struct {
-	Enable bool `mapstructure:"enable"`
+	Enable  bool   `mapstructure:"enable"`
+	Cookies string `mapstructure:"cookies"`
 }
 
 type douyu struct {
