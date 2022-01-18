@@ -115,7 +115,7 @@ func GetRoomInfos(c *gin.Context) {
 
 func SendDanmaku(c *gin.Context) {
 	req := struct {
-		ID      string `form:"id" binding:"required,uuid"` // 服务端分发的uuid
+		ID      string `form:"id" binding:"required"` // 服务端分发的id
 		Content string `form:"content" binding:"required" json:"content"`
 		Type    int    `form:"type" binding:"gte=0,lte=2" json:"type"` // 1:顶部 0:滚动 2:底部
 		Color   int64  `form:"color" binding:"required" json:"color"`
