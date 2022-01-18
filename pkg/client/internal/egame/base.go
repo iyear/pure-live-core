@@ -69,15 +69,21 @@ func (e *EGame) Enter(room string) (int, [][]byte, error) {
 		return -1, nil, err
 	}
 
-	body := append([]byte{uint8(7)}, util.BigEndianUint32(uint32(len(token)))...)
-	body = append(body, []byte(token)...)
+	body := util.PutBytes(
+		[]byte{uint8(7)},
+		util.BigEndianUint32(uint32(len(token))),
+		[]byte(token),
+	)
 
-	header := append(util.BigEndianUint32(uint32(18+len(body))), util.BigEndianUint16(18)...)
-	header = append(header, util.BigEndianUint16(1)...)
-	header = append(header, util.BigEndianUint16(1)...)
-	header = append(header, util.BigEndianUint32(0)...)
-	header = append(header, util.BigEndianUint16(0)...)
-	header = append(header, util.BigEndianUint16(0)...)
+	header := util.PutBytes(
+		util.BigEndianUint32(uint32(18+len(body))),
+		util.BigEndianUint16(18),
+		util.BigEndianUint16(1),
+		util.BigEndianUint16(1),
+		util.BigEndianUint32(0),
+		util.BigEndianUint16(0),
+		util.BigEndianUint16(0),
+	)
 
 	data := append(header, body...)
 	return websocket.BinaryMessage, [][]byte{data}, nil

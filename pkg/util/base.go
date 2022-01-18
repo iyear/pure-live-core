@@ -82,6 +82,14 @@ func BigEndianUint64(v uint64) []byte {
 	return buf
 }
 
+func PutBytes(bytes ...[]byte) []byte {
+	var buf []byte
+	for _, b := range bytes {
+		buf = append(buf, b...)
+	}
+	return buf
+}
+
 func GetCookie(cookies string, key string) string {
 	if cookies == "" {
 		return ""
