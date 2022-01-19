@@ -18,7 +18,7 @@ type Resp struct {
 	} `json:"body"`
 }
 
-//go:embed decode.js
+//go:embed decode.min.js
 var js string
 
 // goja.Runtime 非并发安全
