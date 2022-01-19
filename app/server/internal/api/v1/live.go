@@ -20,7 +20,7 @@ func GetPlayURL(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		format.HTTP(c, ecode.InvalidParams, nil, nil)
+		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
 	url, err := svc_live.GetPlayURL(req.Plat, req.Room)
@@ -38,7 +38,7 @@ func GetRoomInfo(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		format.HTTP(c, ecode.InvalidParams, nil, nil)
+		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
 	info, err := svc_live.GetRoomInfo(req.Plat, req.Room)
@@ -58,7 +58,7 @@ func GetRoomInfos(c *gin.Context) {
 		Room string `form:"room" binding:"required" json:"room"`
 	}
 	if err := c.ShouldBind(&req); err != nil {
-		format.HTTP(c, ecode.InvalidParams, nil, nil)
+		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
 	zap.S().Debugw("GetRoomInfos: ", "req", req)
@@ -121,7 +121,7 @@ func SendDanmaku(c *gin.Context) {
 		Color   int64  `form:"color" binding:"required" json:"color"`
 	}{}
 	if err := c.ShouldBind(&req); err != nil {
-		format.HTTP(c, ecode.InvalidParams, nil, nil)
+		format.HTTP(c, ecode.InvalidParams, err, nil)
 		return
 	}
 
