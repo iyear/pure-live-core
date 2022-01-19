@@ -11,6 +11,7 @@
 | bilibili | 哔哩哔哩 |
 |   huya   |   虎牙   |
 |  douyu   |   斗鱼   |
+|  egame   |   企鹅电竞   |
 
 ## 直播间号
 
@@ -19,6 +20,8 @@
 | bilibili | https://live.bilibili.com/6 (`6`为直播间号) |
 |   huya   | https://www.huya.com/25975826 (`25975826`为直播间号) https://www.huya.com/kaerlol (`kaerlol`为直播间号)   |
 |  douyu   | https://www.douyu.com/312212 (`312212`为直播间号)   |
+|  egame   | https://egame.qq.com/383204988 (`383204988`为直播间号)   |
+
 
 ## 参数说明
 

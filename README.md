@@ -218,7 +218,7 @@ Stream: https://d1--cn-gotcha03.bilivideo.com/live-bvc/842331/live_50329118_9516
 - [x] 哔哩哔哩
 - [x] 虎牙
 - [x] 斗鱼
-- [ ] 企鹅电竞
+- [x] 企鹅电竞
 - [ ] Twitch (等待第三方库支持 `m3u8` 拉流)
 - [ ] 咪咕体育
 
