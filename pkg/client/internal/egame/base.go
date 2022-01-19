@@ -2,7 +2,6 @@ package egame
 
 import (
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/model"
@@ -114,8 +113,8 @@ func (e *EGame) Handle(tp int, data []byte) ([]model.Msg, bool, error) {
 		return nil, false, err
 	}
 
-	t, _ := json.Marshal(resp)
-	fmt.Println(string(t))
+	// t, _ := json.Marshal(resp)
+	// fmt.Println(string(t))
 
 	if resp.Operation != 3 {
 		return nil, false, nil
