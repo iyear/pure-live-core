@@ -1,13 +1,19 @@
 package egame
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/model"
 	"github.com/iyear/pure-live-core/pkg/client/internal/abstract"
+	"github.com/iyear/pure-live-core/pkg/client/internal/egame/internal/packet"
 	"github.com/iyear/pure-live-core/pkg/conf"
 	"github.com/iyear/pure-live-core/pkg/util"
+	"github.com/tidwall/gjson"
 )
+
+const hb = "000000120012000100070000000100000000"
 
 type EGame struct {
 	*abstract.Client
@@ -89,16 +95,49 @@ func (e *EGame) Enter(room string) (int, [][]byte, error) {
 	return websocket.BinaryMessage, [][]byte{data}, nil
 }
 
-// Handle .
-func (e *EGame) Handle(tp int, data []byte) (msg []model.Msg, matched bool, err error) {
-	_ = tp
-	_ = data
-	return nil, false, nil
-}
-
 // HeartBeat .
 func (e *EGame) HeartBeat() (tp int, data []byte, err error) {
-	return 0, nil, fmt.Errorf("not supported")
+	b, err := hex.DecodeString(hb)
+	if err != nil {
+		return 0, nil, err
+	}
+	return websocket.BinaryMessage, b, nil
+}
+
+// Handle .
+func (e *EGame) Handle(tp int, data []byte) ([]model.Msg, bool, error) {
+	if tp != websocket.BinaryMessage {
+		return nil, false, nil
+	}
+	resp, err := packet.Decode(data)
+	if err != nil {
+		return nil, false, err
+	}
+
+	t, _ := json.Marshal(resp)
+	fmt.Println(string(t))
+
+	if resp.Operation != 3 {
+		return nil, false, nil
+	}
+
+	var msgs []model.Msg
+	for _, body := range resp.Body {
+		switch body.MsgType {
+		case 1:
+			for _, bd := range body.BinData {
+				result := gjson.Parse(string(bd))
+				if result.Get("type").Int() == 0 {
+					msgs = append(msgs, &model.MsgDanmaku{
+						Content: result.Get("content").String(),
+						Type:    conf.DanmakuTypeRight,
+						Color:   16777215,
+					})
+				}
+			}
+		}
+	}
+	return msgs, true, nil
 }
 
 // SendDanmaku .

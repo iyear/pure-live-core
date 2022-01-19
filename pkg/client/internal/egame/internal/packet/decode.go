@@ -2,10 +2,21 @@ package packet
 
 import (
 	_ "embed"
+	"encoding/json"
 	"errors"
 	"github.com/dop251/goja"
 	"sync"
 )
+
+type Resp struct {
+	Seq       int `json:"seq"`
+	Operation int `json:"operation"`
+	Body      []*struct {
+		EventId string            `json:"event_id"`
+		MsgType int               `json:"msg_type"`
+		BinData []json.RawMessage `json:"bin_data"`
+	} `json:"body"`
+}
 
 //go:embed decode.js
 var js string
@@ -24,19 +35,24 @@ var pool = sync.Pool{
 	},
 }
 
-func Decode(data []byte) (string, error) {
+func Decode(data []byte) (*Resp, error) {
 	vm := pool.Get().(*goja.Runtime)
 
 	decode, f := goja.AssertFunction(vm.Get("decode"))
 	if !f {
-		return "", errors.New("can not assert decode function")
+		return nil, errors.New("can not assert decode function")
 	}
 
 	r, err := decode(goja.Undefined(), vm.ToValue(vm.NewArrayBuffer(data)))
 	if err != nil {
-		return "", err
+		return nil, err
+	}
+
+	var resp Resp
+	if err = json.Unmarshal([]byte(r.String()), &resp); err != nil {
+		return nil, err
 	}
 
 	pool.Put(vm)
-	return r.String(), nil
+	return &resp, nil
 }
