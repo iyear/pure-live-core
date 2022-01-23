@@ -7,8 +7,8 @@ type Client interface {
 	GetPlayURL(room string, qn int) (*PlayURL, error)
 	// GetRoomInfo room可以为短号也可以为长号
 	GetRoomInfo(room string) (*RoomInfo, error)
-	// Host ws host
-	Host() string
+	// Host ws host，对于部分需要用到room的直播平台会传入room,其他平台忽略即可
+	Host(room string) string
 	// Enter 一次可以返回多条消息，hub将按顺序依次发送，用于需要一次发送多条进入直播间消息的场景
 	Enter(room string) (tp int, data [][]byte, err error)
 	// Handle matched为是否读取msg的操作，用于跳过不想匹配的消息，err为错误，先判断错误再判断matched

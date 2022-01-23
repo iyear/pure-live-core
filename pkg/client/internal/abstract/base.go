@@ -27,7 +27,8 @@ func (c *Client) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 // Host return websocket host
-func (c *Client) Host() string {
+func (c *Client) Host(room string) string {
+	_ = room
 	return ""
 }
 

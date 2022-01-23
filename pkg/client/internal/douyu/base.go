@@ -181,7 +181,8 @@ func (d *Douyu) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 // Host
-func (d *Douyu) Host() string {
+func (d *Douyu) Host(room string) string {
+	_ = room
 	return "wss://danmuproxy.douyu.com:8503/"
 }
 

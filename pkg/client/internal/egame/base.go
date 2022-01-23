@@ -63,7 +63,8 @@ func (e *EGame) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 // Host .
-func (e *EGame) Host() string {
+func (e *EGame) Host(room string) string {
+	_ = room
 	return "wss://barragepush.egame.qq.com/sub"
 }
 

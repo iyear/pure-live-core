@@ -101,7 +101,8 @@ func (h *Huya) GetRoomInfo(room string) (*model.RoomInfo, error) {
 }
 
 // Host .
-func (h *Huya) Host() string {
+func (h *Huya) Host(room string) string {
+	_ = room
 	return "wss://cdnws.api.huya.com/"
 }
 
@@ -229,7 +230,7 @@ func (h *Huya) SendDanmaku(room string, content string, tp int, color int64) err
 		return err
 	}
 
-	conn, _, err := websocket.DefaultDialer.DialContext(ctx, h.Host(), nil)
+	conn, _, err := websocket.DefaultDialer.DialContext(ctx, h.Host(room), nil)
 	if err != nil {
 		return err
 	}

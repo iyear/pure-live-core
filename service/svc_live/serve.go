@@ -13,7 +13,7 @@ func Serve(ctx context.Context, dialer *websocket.Dialer, id string, client mode
 	// conn -> enter(on entered) -> go receive()   -> for{send msg to local}
 	//  						 -> go heartbeat() -
 
-	live, _, err := dialer.DialContext(ctx, client.Host(), nil)
+	live, _, err := dialer.DialContext(ctx, client.Host(room), nil)
 	if err != nil {
 		return nil, err
 	}
