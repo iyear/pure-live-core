@@ -6,6 +6,7 @@ const (
 	PlatHuya     = "huya"
 	PlatDouyu    = "douyu"
 	PlatEGame    = "egame"
+	PlatInke     = "inke"
 )
 
 const (
