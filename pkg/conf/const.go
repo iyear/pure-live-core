@@ -1,5 +1,7 @@
 package conf
 
+import "errors"
+
 const (
 	PlatAbstract = "abstract"
 	PlatBiliBili = "bilibili"
@@ -38,4 +40,8 @@ const (
 
 const (
 	BizRoomInfo = "ri"
+)
+
+var (
+	ErrSkip = errors.New("skip")
 )

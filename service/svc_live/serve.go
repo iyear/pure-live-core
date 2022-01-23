@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gorilla/websocket"
 	"github.com/iyear/pure-live-core/model"
+	"github.com/iyear/pure-live-core/pkg/conf"
 	"go.uber.org/zap"
 	"time"
 )
@@ -24,7 +25,7 @@ func Serve(ctx context.Context, dialer *websocket.Dialer, id string, client mode
 
 	tp, data, err := client.Enter(room)
 
-	if err != nil {
+	if err != nil && err != conf.ErrSkip {
 		return nil, err
 	}
 	for _, d := range data {
@@ -47,6 +48,9 @@ func heartbeat(ctx context.Context, id string, client model.Client, live *websoc
 
 	hb := func() {
 		tp, data, err := client.HeartBeat()
+		if err == conf.ErrSkip {
+			return
+		}
 		if err != nil {
 			zap.S().Warnw("failed to get heartbeat data", "id", id, "error", err)
 			return
