@@ -18,7 +18,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path"
+	"path/filepath"
 	"syscall"
 	"time"
 )
@@ -44,7 +44,7 @@ func Run(serverConf string, accountConf string) {
 		zap.S().Fatalw("failed to mkdir", "error", err)
 	}
 
-	sqlite, err := db.Init(path.Join(config.Server.Path, "data.db"))
+	sqlite, err := db.Init(filepath.Join(config.Server.Path, "data.db"))
 	if err != nil {
 		zap.S().Fatalw("failed to init database", "error", err)
 	}
