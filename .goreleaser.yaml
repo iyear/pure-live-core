@@ -4,6 +4,8 @@ env:
 builds:
   - env:
       - CGO_ENABLED=0
+    flags:
+      - -trimpath
     ldflags: -s -w
     goos:
       - linux
@@ -33,7 +35,7 @@ checksum:
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     replacements:
-      darwin: Darwin
+      darwin: macOS
       linux: Linux
       windows: Windows
       386: 32bit
@@ -47,11 +49,23 @@ archives:
       - config/account.yaml.example
       - LICENSE
       - static
-snapshot:
-  name_template: "{{ .Tag }}-next"
 changelog:
+  use: github
   sort: asc
-  filters:
-    exclude:
-      - '^docs:'
-      - '^test:'
+  groups:
+    - title: New Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Documentation updates'
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 2
+    - title: 'Refactoring'
+      regexp: "^.*refactor[(\\w)]*:+.*$"
+      order: 3
+    - title: Others
+      order: 4
+release:
+  draft: true
