@@ -41,6 +41,7 @@ jobs:
           yarn
           yarn run build
           cp -r dist ../static
+          cd .. && rm -rf frontend
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:

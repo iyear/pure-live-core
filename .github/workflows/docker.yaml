@@ -32,6 +32,7 @@ jobs:
           yarn
           yarn run build
           cp -r dist ../static
+          cd .. && rm -rf frontend
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
