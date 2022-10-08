@@ -12,7 +12,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 COPY . .
-RUN go build -ldflags '-w -s' -o pure-live .
+RUN go build -trimpath -ldflags '-w -s' -o pure-live .
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
   apk add --no-cache ca-certificates
