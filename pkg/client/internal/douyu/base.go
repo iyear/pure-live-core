@@ -145,7 +145,7 @@ func (d *Douyu) GetPlayURL(room string, qn int) (*model.PlayURL, error) {
 	return &model.PlayURL{
 		Qn:     qn,
 		Desc:   util.Qn2Desc(qn),
-		Origin: fmt.Sprintf("http://vplay1a.douyucdn.cn/live/%s?uuid=", strings.Split(resp.Data.RtmpLive, "?")[0]),
+		Origin: fmt.Sprintf("http://akm-tct.douyucdn.cn/live/%s?uuid=", strings.Split(resp.Data.RtmpLive, "?")[0]),
 		CORS:   true,
 		Type:   conf.StreamFlv,
 	}, nil
